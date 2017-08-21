@@ -19,6 +19,8 @@ class IngredientModel extends Model implements HasMedia
     use HasMediaTrait;
     use RevisionableTrait;
 
+    const HREF = '/ingredient/';
+
     /**
      * Связанная с моделью таблица.
      *
@@ -81,5 +83,15 @@ class IngredientModel extends Model implements HasMedia
         $engine->addRules($rules);
 
         return $engine;
+    }
+
+    /**
+     * Ссылка на материал.
+     *
+     * @return \Illuminate\Contracts\Routing\UrlGenerator|string
+     */
+    public function getHrefAttribute()
+    {
+        return url(self::HREF . (!empty($this->slug) ? $this->slug : $this->id));
     }
 }

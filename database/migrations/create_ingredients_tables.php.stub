@@ -1,0 +1,35 @@
+<?php
+
+use Illuminate\Database\Schema\Blueprint;
+use Illuminate\Database\Migrations\Migration;
+
+class CreateIngredientsTables extends Migration
+{
+    public function up()
+    {
+        Schema::create('ingredients', function (Blueprint $table) {
+            $table->increments('id');
+            $table->string('title');
+            $table->string('slug');
+            $table->text('description')->nullable();
+            $table->text('content')->nullable();
+            $table->timestamps();
+            $table->softDeletes();
+        });
+
+        Schema::create('ingredientables', function (Blueprint $table) {
+            $table->integer('ingredient_model_id')->unsigned();
+            $table->integer('ingredientable_id')->unsigned();
+            $table->string('ingredientable_type');
+            $table->timestamps();
+
+            $table->foreign('ingredient_model_id')->references('id')->on('ingredients')->onDelete('cascade');
+        });
+    }
+
+    public function down()
+    {
+        Schema::drop('ingredients');
+        Schema::drop('ingredientables');
+    }
+}

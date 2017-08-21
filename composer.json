@@ -1,0 +1,20 @@
+{
+    "name": "inetstudio/ingredients",
+    "description": "Package for ingredients materials",
+    "homepage": "https://github.com/inetstudio/ingredients",
+    "license": "MIT",
+    "authors": [
+      {
+        "name": "Konstantin Bukin",
+        "email": "bukin@inetstudio.ru"
+      }
+    ],
+    "require": {
+      "inetstudio/admin-panel": "1.*"
+    },
+    "autoload": {
+      "psr-4": {
+        "InetStudio\\Ingredients\\": "src/"
+      }
+    }
+}

@@ -10,6 +10,7 @@ use Illuminate\Database\Eloquent\SoftDeletes;
 use Spatie\MediaLibrary\HasMedia\HasMediaTrait;
 use Venturecraft\Revisionable\RevisionableTrait;
 use Spatie\MediaLibrary\HasMedia\Interfaces\HasMedia;
+use Cviebrock\EloquentSluggable\SluggableScopeHelpers;
 
 class IngredientModel extends Model implements HasMedia
 {
@@ -18,6 +19,7 @@ class IngredientModel extends Model implements HasMedia
     use SoftDeletes;
     use HasMediaTrait;
     use RevisionableTrait;
+    use SluggableScopeHelpers;
 
     const HREF = '/ingredient/';
 

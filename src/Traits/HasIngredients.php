@@ -64,7 +64,7 @@ trait HasIngredients
     {
         static::created(function (Model $ingredientableModel) {
             if ($ingredientableModel->queuedIngredients) {
-                $ingredientableModel->categorize($ingredientableModel->queuedIngredients);
+                $ingredientableModel->attachIngredients($ingredientableModel->queuedIngredients);
                 $ingredientableModel->queuedIngredients = [];
             }
         });

@@ -33,7 +33,7 @@ class IngredientsController extends Controller
         $table->ajax($this->getAjaxOptions());
         $table->parameters($this->getTableParameters());
 
-        return view('admin.module.ingredients::pages.ingredients.index', compact('table'));
+        return view('admin.module.ingredients::pages.index', compact('table'));
     }
 
     /**
@@ -106,7 +106,7 @@ class IngredientsController extends Controller
      */
     public function create()
     {
-        return view('admin.module.ingredients::pages.ingredients.form', [
+        return view('admin.module.ingredients::pages.form', [
             'item' => new IngredientModel(),
         ]);
     }
@@ -132,7 +132,7 @@ class IngredientsController extends Controller
     {
         if (! is_null($id) && $id > 0 && $item = IngredientModel::find($id)) {
 
-            return view('admin.module.ingredients::pages.ingredients.form', [
+            return view('admin.module.ingredients::pages.form', [
                 'item' => $item,
             ]);
         } else {

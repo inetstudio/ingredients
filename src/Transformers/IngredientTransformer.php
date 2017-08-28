@@ -18,7 +18,7 @@ class IngredientTransformer extends TransformerAbstract
             'title' => $ingredient->title,
             'created_at' => (string) $ingredient->created_at,
             'updated_at' => (string) $ingredient->updated_at,
-            'actions' => view('admin.module.ingredients::pages.ingredients.datatables.actions', [
+            'actions' => view('admin.module.ingredients::partials.datatables.actions', [
                 'id' => $ingredient->id,
                 'href' => $ingredient->href,
             ])->render(),

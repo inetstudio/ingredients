@@ -9,7 +9,7 @@
 @section('content')
 
     @push('breadcrumbs')
-        @include('admin.module.ingredients::partials.breadcrumbs')
+        @include('admin.module.ingredients::partials.ingredients.breadcrumbs')
         <li>
             <a href="{{ route('back.ingredients.index') }}">Ингредиенты</a>
         </li>

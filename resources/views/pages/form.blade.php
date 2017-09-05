@@ -88,13 +88,13 @@
                                             [
                                                 'title' => 'Выбрать область',
                                                 'name' => 'default',
-                                                'ratio' => '300/280',
+                                                'ratio' => '380/360',
                                                 'value' => isset($previewImageMedia) ? $previewImageMedia->getCustomProperty('crop.default') : '',
                                                 'size' => [
-                                                    'width' => 300,
-                                                    'height' => 280,
+                                                    'width' => 380,
+                                                    'height' => 360,
                                                     'type' => 'min',
-                                                    'description' => 'Минимальный размер области — 300x280 пикселей'
+                                                    'description' => 'Минимальный размер области — 380x360 пикселей'
                                                 ],
                                             ],
                                         ],

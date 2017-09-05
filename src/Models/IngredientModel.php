@@ -9,10 +9,10 @@ use Cviebrock\EloquentSluggable\Sluggable;
 use Illuminate\Database\Eloquent\SoftDeletes;
 use Spatie\MediaLibrary\HasMedia\HasMediaTrait;
 use Venturecraft\Revisionable\RevisionableTrait;
-use Spatie\MediaLibrary\HasMedia\Interfaces\HasMedia;
 use Cviebrock\EloquentSluggable\SluggableScopeHelpers;
+use Spatie\MediaLibrary\HasMedia\Interfaces\HasMediaConversions;
 
-class IngredientModel extends Model implements HasMedia
+class IngredientModel extends Model implements HasMediaConversions
 {
     use MetaTrait;
     use Sluggable;
@@ -95,5 +95,24 @@ class IngredientModel extends Model implements HasMedia
     public function getHrefAttribute()
     {
         return url(self::HREF . (!empty($this->slug) ? $this->slug : $this->id));
+    }
+
+    public function registerMediaConversions()
+    {
+        $quality = (config('ingredients.images.quality')) ? config('ingredients.images.quality') : 75;
+
+        if (config('ingredients.images.conversions')) {
+            foreach (config('ingredients.images.conversions') as $collection => $image) {
+                foreach ($image as $crop) {
+                    foreach ($crop as $conversion) {
+                        $this->addMediaConversion($conversion['name'])
+                            ->quality($quality)
+                            ->width($conversion['size']['width'])
+                            ->height($conversion['size']['height'])
+                            ->performOnCollections($collection);
+                    }
+                }
+            }
+        }
     }
 }

@@ -105,11 +105,17 @@ class IngredientModel extends Model implements HasMediaConversions
             foreach (config('ingredients.images.conversions') as $collection => $image) {
                 foreach ($image as $crop) {
                     foreach ($crop as $conversion) {
-                        $this->addMediaConversion($conversion['name'])
-                            ->quality($quality)
-                            ->width($conversion['size']['width'])
-                            ->height($conversion['size']['height'])
-                            ->performOnCollections($collection);
+                        $imageConversion = $this->addMediaConversion($conversion['name'])->quality($quality);
+
+                        if (isset($conversion['size']['width'])) {
+                            $imageConversion->width($conversion['size']['width']);
+                        }
+
+                        if (isset($conversion['size']['height'])) {
+                            $imageConversion->height($conversion['size']['height']);
+                        }
+
+                        $imageConversion->performOnCollections($collection);
                     }
                 }
             }

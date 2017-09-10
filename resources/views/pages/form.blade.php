@@ -15,13 +15,16 @@
         </li>
     @endpush
 
-    @if ($item->id)
-        <div class="row m-sm">
+    <div class="row m-sm">
+        <a class="btn btn-white" href="{{ route('back.ingredients.index') }}">
+            <i class="fa fa-arrow-left"></i> Вернуться назад
+        </a>
+        @if ($item->id && $item->href)
             <a class="btn btn-white" href="{{ $item->href }}" target="_blank">
                 <i class="fa fa-eye"></i> Посмотреть на сайте
             </a>
-        </div>
-    @endif
+        @endif
+    </div>
 
     <div class="wrapper wrapper-content">
 

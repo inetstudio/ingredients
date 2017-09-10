@@ -12,6 +12,37 @@ use Venturecraft\Revisionable\RevisionableTrait;
 use Cviebrock\EloquentSluggable\SluggableScopeHelpers;
 use Spatie\MediaLibrary\HasMedia\Interfaces\HasMediaConversions;
 
+/**
+ * InetStudio\Ingredients\Models\IngredientModel
+ *
+ * @property int $id
+ * @property string $title
+ * @property string $slug
+ * @property string|null $description
+ * @property string|null $content
+ * @property \Carbon\Carbon|null $created_at
+ * @property \Carbon\Carbon|null $updated_at
+ * @property \Carbon\Carbon|null $deleted_at
+ * @property-read \Illuminate\Contracts\Routing\UrlGenerator|string $href
+ * @property-read \Illuminate\Database\Eloquent\Collection|\Spatie\MediaLibrary\Media[] $media
+ * @property-read \Illuminate\Database\Eloquent\Collection|\Phoenix\EloquentMeta\Meta[] $meta
+ * @property-read \Illuminate\Database\Eloquent\Collection|\Venturecraft\Revisionable\Revision[] $revisionHistory
+ * @method static \Illuminate\Database\Eloquent\Builder|\InetStudio\Ingredients\Models\IngredientModel findSimilarSlugs(\Illuminate\Database\Eloquent\Model $model, $attribute, $config, $slug)
+ * @method static bool|null forceDelete()
+ * @method static \Illuminate\Database\Query\Builder|\InetStudio\Ingredients\Models\IngredientModel onlyTrashed()
+ * @method static bool|null restore()
+ * @method static \Illuminate\Database\Eloquent\Builder|\InetStudio\Ingredients\Models\IngredientModel whereContent($value)
+ * @method static \Illuminate\Database\Eloquent\Builder|\InetStudio\Ingredients\Models\IngredientModel whereCreatedAt($value)
+ * @method static \Illuminate\Database\Eloquent\Builder|\InetStudio\Ingredients\Models\IngredientModel whereDeletedAt($value)
+ * @method static \Illuminate\Database\Eloquent\Builder|\InetStudio\Ingredients\Models\IngredientModel whereDescription($value)
+ * @method static \Illuminate\Database\Eloquent\Builder|\InetStudio\Ingredients\Models\IngredientModel whereId($value)
+ * @method static \Illuminate\Database\Eloquent\Builder|\InetStudio\Ingredients\Models\IngredientModel whereSlug($value)
+ * @method static \Illuminate\Database\Eloquent\Builder|\InetStudio\Ingredients\Models\IngredientModel whereTitle($value)
+ * @method static \Illuminate\Database\Eloquent\Builder|\InetStudio\Ingredients\Models\IngredientModel whereUpdatedAt($value)
+ * @method static \Illuminate\Database\Query\Builder|\InetStudio\Ingredients\Models\IngredientModel withTrashed()
+ * @method static \Illuminate\Database\Query\Builder|\InetStudio\Ingredients\Models\IngredientModel withoutTrashed()
+ * @mixin \Eloquent
+ */
 class IngredientModel extends Model implements HasMediaConversions
 {
     use MetaTrait;
@@ -50,8 +81,10 @@ class IngredientModel extends Model implements HasMediaConversions
         'deleted_at',
     ];
 
+    protected $revisionCreationsEnabled = true;
+
     /**
-     * Return the sluggable configuration array for this model.
+     * Возвращаем конфиг для генерации slug модели.
      *
      * @return array
      */
@@ -64,8 +97,6 @@ class IngredientModel extends Model implements HasMediaConversions
             ],
         ];
     }
-
-    protected $revisionCreationsEnabled = true;
 
     /**
      * Правила для транслита.
@@ -88,7 +119,7 @@ class IngredientModel extends Model implements HasMediaConversions
     }
 
     /**
-     * Ссылка на материал.
+     * Ссылка на ингредиент.
      *
      * @return \Illuminate\Contracts\Routing\UrlGenerator|string
      */
@@ -97,6 +128,9 @@ class IngredientModel extends Model implements HasMediaConversions
         return url(self::HREF . (!empty($this->slug) ? $this->slug : $this->id));
     }
 
+    /**
+     * Регистрируем преобразования изображений.
+     */
     public function registerMediaConversions()
     {
         $quality = (config('ingredients.images.quality')) ? config('ingredients.images.quality') : 75;

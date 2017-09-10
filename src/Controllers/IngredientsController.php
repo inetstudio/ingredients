@@ -330,10 +330,29 @@ class IngredientsController extends Controller
      */
     public function getSuggestions(Request $request)
     {
-        $search = $request->get('q');
-        $data = [];
+        if ($request->has('type') && $request->get('type') == 'autocomplete') {
+            $search = $request->get('query');
+            $data['suggestions'] = [];
 
-        $data['items'] = IngredientModel::select(['id', 'title as name'])->where('title', 'LIKE', '%'.$search.'%')->get()->toArray();
+            $ingredients = IngredientModel::where('title', 'LIKE', '%'.$search.'%')->get();
+
+            foreach ($ingredients as $ingredient) {
+                $data['suggestions'][] = [
+                    'value' => $ingredient->title,
+                    'data' => [
+                        'id' => $ingredient->id,
+                        'title' => $ingredient->title,
+                        'href' => url($ingredient->href),
+                        'preview' => ($ingredient->getFirstMedia('preview')) ? url($ingredient->getFirstMedia('preview')->getUrl('preview_default')) : '',
+                    ]
+                ];
+            }
+        } else {
+            $search = $request->get('q');
+            $data = [];
+
+            $data['items'] = IngredientModel::select(['id', 'title as name'])->where('title', 'LIKE', '%'.$search.'%')->get()->toArray();
+        }
 
         return response()->json($data);
     }

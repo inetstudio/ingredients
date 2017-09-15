@@ -2,11 +2,14 @@
 
 namespace InetStudio\Ingredients\Models;
 
+use Spatie\Tags\HasTags;
 use Cocur\Slugify\Slugify;
 use Phoenix\EloquentMeta\MetaTrait;
+use InetStudio\Tags\Models\TagModel;
 use Illuminate\Database\Eloquent\Model;
 use Cviebrock\EloquentSluggable\Sluggable;
 use InetStudio\Products\Traits\HasProducts;
+use InetStudio\Statuses\Models\StatusModel;
 use Illuminate\Database\Eloquent\SoftDeletes;
 use Spatie\MediaLibrary\HasMedia\HasMediaTrait;
 use Venturecraft\Revisionable\RevisionableTrait;
@@ -21,13 +24,17 @@ use Spatie\MediaLibrary\HasMedia\Interfaces\HasMediaConversions;
  * @property string $slug
  * @property string|null $description
  * @property string|null $content
+ * @property int|null $status_id
  * @property \Carbon\Carbon|null $created_at
  * @property \Carbon\Carbon|null $updated_at
  * @property \Carbon\Carbon|null $deleted_at
  * @property-read \Illuminate\Contracts\Routing\UrlGenerator|string $href
  * @property-read \Illuminate\Database\Eloquent\Collection|\Spatie\MediaLibrary\Media[] $media
  * @property-read \Illuminate\Database\Eloquent\Collection|\Phoenix\EloquentMeta\Meta[] $meta
+ * @property \Illuminate\Database\Eloquent\Collection|\InetStudio\Products\Models\ProductModel[] $products
  * @property-read \Illuminate\Database\Eloquent\Collection|\Venturecraft\Revisionable\Revision[] $revisionHistory
+ * @property \Illuminate\Database\Eloquent\Collection|\InetStudio\Tags\Models\TagModel[] $tags
+ * @property-read \InetStudio\Statuses\Models\StatusModel $status
  * @method static \Illuminate\Database\Eloquent\Builder|\InetStudio\Ingredients\Models\IngredientModel findSimilarSlugs(\Illuminate\Database\Eloquent\Model $model, $attribute, $config, $slug)
  * @method static bool|null forceDelete()
  * @method static \Illuminate\Database\Query\Builder|\InetStudio\Ingredients\Models\IngredientModel onlyTrashed()
@@ -38,14 +45,23 @@ use Spatie\MediaLibrary\HasMedia\Interfaces\HasMediaConversions;
  * @method static \Illuminate\Database\Eloquent\Builder|\InetStudio\Ingredients\Models\IngredientModel whereDescription($value)
  * @method static \Illuminate\Database\Eloquent\Builder|\InetStudio\Ingredients\Models\IngredientModel whereId($value)
  * @method static \Illuminate\Database\Eloquent\Builder|\InetStudio\Ingredients\Models\IngredientModel whereSlug($value)
+ * @method static \Illuminate\Database\Eloquent\Builder|\InetStudio\Ingredients\Models\IngredientModel whereStatusId($value)
  * @method static \Illuminate\Database\Eloquent\Builder|\InetStudio\Ingredients\Models\IngredientModel whereTitle($value)
  * @method static \Illuminate\Database\Eloquent\Builder|\InetStudio\Ingredients\Models\IngredientModel whereUpdatedAt($value)
+ * @method static \Illuminate\Database\Eloquent\Builder|\InetStudio\Ingredients\Models\IngredientModel withAllProducts($products, $column = 'id')
+ * @method static \Illuminate\Database\Eloquent\Builder|\InetStudio\Ingredients\Models\IngredientModel withAllTags($tags, $type = null)
+ * @method static \Illuminate\Database\Eloquent\Builder|\InetStudio\Ingredients\Models\IngredientModel withAnyProducts($products, $column = 'id')
+ * @method static \Illuminate\Database\Eloquent\Builder|\InetStudio\Ingredients\Models\IngredientModel withAnyTags($tags, $type = null)
+ * @method static \Illuminate\Database\Eloquent\Builder|\InetStudio\Ingredients\Models\IngredientModel withProducts($products, $column = 'id')
  * @method static \Illuminate\Database\Query\Builder|\InetStudio\Ingredients\Models\IngredientModel withTrashed()
+ * @method static \Illuminate\Database\Eloquent\Builder|\InetStudio\Ingredients\Models\IngredientModel withoutAnyProducts()
+ * @method static \Illuminate\Database\Eloquent\Builder|\InetStudio\Ingredients\Models\IngredientModel withoutProducts($products, $column = 'id')
  * @method static \Illuminate\Database\Query\Builder|\InetStudio\Ingredients\Models\IngredientModel withoutTrashed()
  * @mixin \Eloquent
  */
 class IngredientModel extends Model implements HasMediaConversions
 {
+    use HasTags;
     use MetaTrait;
     use Sluggable;
     use HasProducts;
@@ -70,6 +86,7 @@ class IngredientModel extends Model implements HasMediaConversions
      */
     protected $fillable = [
         'title', 'slug', 'description', 'content',
+        'status_id',
     ];
 
     /**
@@ -84,6 +101,16 @@ class IngredientModel extends Model implements HasMediaConversions
     ];
 
     protected $revisionCreationsEnabled = true;
+
+    /**
+     * Отношение "один к одному" с моделью статуса.
+     *
+     * @return \Illuminate\Database\Eloquent\Relations\HasOne
+     */
+    public function status()
+    {
+        return $this->hasOne(StatusModel::class, 'id', 'status_id');
+    }
 
     /**
      * Возвращаем конфиг для генерации slug модели.
@@ -128,6 +155,16 @@ class IngredientModel extends Model implements HasMediaConversions
     public function getHrefAttribute()
     {
         return url(self::HREF . (!empty($this->slug) ? $this->slug : $this->id));
+    }
+
+    /**
+     * Возвращаем класс модели тега.
+     *
+     * @return string
+     */
+    public static function getTagClassName()
+    {
+        return TagModel::class;
     }
 
     /**

@@ -34,6 +34,10 @@
                 <i class="fa fa-eye"></i> Посмотреть на сайте
             </a>
         @endif
+        @php
+            $status = (! $item->id or ! $item->status) ? \InetStudio\Statuses\Models\StatusModel::get()->first() : $item->status;
+        @endphp
+        <div class="bg-{{ $status->color_class }} p-xs b-r-sm pull-right">{{ $status->name }}</div>
     </div>
 
     <div class="wrapper wrapper-content">
@@ -167,6 +171,32 @@
                                                 ],
                                             ],
                                         ],
+                                    ]) !!}
+
+                                    {!! Form::dropdown('tags[]', $item->tags()->pluck('id')->toArray(), [
+                                        'label' => [
+                                            'title' => 'Теги',
+                                        ],
+                                        'field' => [
+                                            'class' => 'select2 form-control',
+                                            'data-placeholder' => 'Выберите теги',
+                                            'style' => 'width: 100%',
+                                            'multiple' => 'multiple',
+                                            'data-source' => route('back.tags.getSuggestions'),
+                                        ],
+                                        'options' => (old('tags')) ? \InetStudio\Tags\Models\TagModel::whereIn('id', old('tags'))->pluck('name', 'id')->toArray() : $item->tags()->pluck('name', 'id')->toArray(),
+                                    ]) !!}
+
+                                    {!! Form::dropdown('status_id', $item->status_id, [
+                                        'label' => [
+                                            'title' => 'Статус материала',
+                                        ],
+                                        'field' => [
+                                            'class' => 'select2 form-control',
+                                            'data-placeholder' => 'Выберите статус',
+                                            'style' => 'width: 100%',
+                                        ],
+                                        'options' => [null => ''] + \InetStudio\Statuses\Models\StatusModel::select('id', 'name')->pluck('name', 'id')->toArray(),
                                     ]) !!}
 
                                 </div>

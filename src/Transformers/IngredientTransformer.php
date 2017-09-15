@@ -16,6 +16,7 @@ class IngredientTransformer extends TransformerAbstract
         return [
             'id' => (int) $ingredient->id,
             'title' => $ingredient->title,
+            'status' => ($ingredient->status) ? $ingredient->status->name : '',
             'created_at' => (string) $ingredient->created_at,
             'updated_at' => (string) $ingredient->updated_at,
             'actions' => view('admin.module.ingredients::partials.datatables.actions', [

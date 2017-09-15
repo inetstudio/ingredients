@@ -5,6 +5,7 @@ namespace InetStudio\Ingredients\Controllers;
 use Illuminate\Http\Request;
 use Yajra\Datatables\Datatables;
 use App\Http\Controllers\Controller;
+use InetStudio\Tags\Models\TagModel;
 use Illuminate\Support\Facades\Session;
 use Illuminate\Support\Facades\Storage;
 use InetStudio\Ingredients\Models\IngredientModel;
@@ -47,6 +48,7 @@ class IngredientsController extends Controller
         if ($model == 'ingredients') {
             return [
                 ['data' => 'title', 'name' => 'title', 'title' => 'Заголовок'],
+                ['data' => 'status', 'name' => 'status.name', 'title' => 'Статус'],
                 ['data' => 'created_at', 'name' => 'created_at', 'title' => 'Дата создания'],
                 ['data' => 'updated_at', 'name' => 'updated_at', 'title' => 'Дата обновления'],
                 ['data' => 'actions', 'name' => 'actions', 'title' => 'Действия', 'orderable' => false, 'searchable' => false],
@@ -202,9 +204,11 @@ class IngredientsController extends Controller
         $item->slug = strip_tags($request->get('slug'));
         $item->description = strip_tags($request->input('description.text'));
         $item->content = $request->input('content.text');
+        $item->status_id = $request->get('status_id');
         $item->save();
 
         $this->saveMeta($item, $request);
+        $this->saveTags($item, $request);
         $this->saveProducts($item, $request);
         $this->saveImages($item, $request, ['og_image', 'preview', 'content']);
 
@@ -225,6 +229,21 @@ class IngredientsController extends Controller
             foreach ($request->get('meta') as $key => $value) {
                 $item->updateMeta($key, $value);
             }
+        }
+    }
+
+    /**
+     * Сохраняем теги.
+     *
+     * @param IngredientModel $item
+     * @param SaveIngredientRequest $request
+     */
+    private function saveTags($item, $request)
+    {
+        if ($request->has('tags')) {
+            $item->syncTags(TagModel::whereIn('id', (array) $request->get('tags'))->get());
+        } else {
+            $item->detachTags($item->tags);
         }
     }
 

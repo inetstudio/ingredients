@@ -13,6 +13,7 @@ class CreateIngredientsTables extends Migration
             $table->string('slug');
             $table->text('description')->nullable();
             $table->text('content')->nullable();
+            $table->unsignedInteger('status_id')->default(1);
             $table->timestamps();
             $table->softDeletes();
         });

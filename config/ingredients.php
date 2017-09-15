@@ -30,6 +30,24 @@ return [
                         ],
                     ],
                 ],
+                '3_2' => [
+                    [
+                        'name' => 'preview_3_2',
+                        'size' => [
+                            'width' => 768,
+                            'height' => 512,
+                        ],
+                    ],
+                ],
+                '3_4' => [
+                    [
+                        'name' => 'preview_3_4',
+                        'size' => [
+                            'width' => 384,
+                            'height' => 512,
+                        ],
+                    ],
+                ],
             ],
             'content' => [
                 'default' => [

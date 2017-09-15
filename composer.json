@@ -10,7 +10,8 @@
       }
     ],
     "require": {
-      "inetstudio/admin-panel": "1.4.*"
+      "inetstudio/admin-panel": "1.4.*",
+      "inetstudio/products": "1.4.*"
     },
     "autoload": {
       "psr-4": {

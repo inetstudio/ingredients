@@ -29,8 +29,8 @@ class IngredientsController extends Controller
     {
         $table = $dataTable->getHtmlBuilder();
 
-        $table->columns($this->getColumns());
-        $table->ajax($this->getAjaxOptions());
+        $table->columns($this->getColumns('ingredients'));
+        $table->ajax($this->getAjaxOptions('ingredients'));
         $table->parameters($this->getTableParameters());
 
         return view('admin.module.ingredients::pages.index', compact('table'));
@@ -39,27 +39,41 @@ class IngredientsController extends Controller
     /**
      * Свойства колонок datatables.
      *
+     * @param $model
      * @return array
      */
-    private function getColumns()
+    private function getColumns($model)
     {
-        return [
-            ['data' => 'title', 'name' => 'title', 'title' => 'Заголовок'],
-            ['data' => 'created_at', 'name' => 'created_at', 'title' => 'Дата создания'],
-            ['data' => 'updated_at', 'name' => 'updated_at', 'title' => 'Дата обновления'],
-            ['data' => 'actions', 'name' => 'actions', 'title' => 'Действия', 'orderable' => false, 'searchable' => false],
-        ];
+        if ($model == 'ingredients') {
+            return [
+                ['data' => 'title', 'name' => 'title', 'title' => 'Заголовок'],
+                ['data' => 'created_at', 'name' => 'created_at', 'title' => 'Дата создания'],
+                ['data' => 'updated_at', 'name' => 'updated_at', 'title' => 'Дата обновления'],
+                ['data' => 'actions', 'name' => 'actions', 'title' => 'Действия', 'orderable' => false, 'searchable' => false],
+            ];
+        } elseif ($model == 'products') {
+            return [
+                ['data' => 'id', 'name' => 'id', 'title' => 'ID', 'orderable' => false, 'searchable' => false, 'visible' => false],
+                ['data' => 'preview', 'name' => 'preview', 'title' => 'Изображение', 'orderable' => false, 'searchable' => false],
+                ['data' => 'brand', 'name' => 'brand', 'title' => 'Бренд'],
+                ['data' => 'title', 'name' => 'title', 'title' => 'Название'],
+                ['data' => 'description', 'name' => 'description', 'title' => 'Описание'],
+                ['data' => 'actions', 'name' => 'actions', 'title' => 'Действия', 'orderable' => false, 'searchable' => false],
+            ];
+        }
     }
 
     /**
      * Свойства ajax datatables.
      *
+     * @param $model
+     * @param $type
      * @return array
      */
-    private function getAjaxOptions()
+    private function getAjaxOptions($model, $type = '')
     {
         return [
-            'url' => route('back.ingredients.data'),
+            'url' => (! $type) ? route('back.'.$model.'.data') : route('back.'.$model.'.data', ['type' => $type]),
             'type' => 'POST',
             'data' => 'function(data) { data._token = $(\'meta[name="csrf-token"]\').attr(\'content\'); }',
         ];
@@ -102,12 +116,20 @@ class IngredientsController extends Controller
     /**
      * Добавление ингредиента.
      *
+     * @param Datatables $dataTable
      * @return \Illuminate\Contracts\View\Factory|\Illuminate\View\View
      */
-    public function create()
+    public function create(Datatables $dataTable)
     {
+        $table = $dataTable->getHtmlBuilder();
+
+        $table->columns($this->getColumns('products'));
+        $table->ajax($this->getAjaxOptions('products', 'embedded'));
+        $table->parameters($this->getTableParameters());
+
         return view('admin.module.ingredients::pages.form', [
             'item' => new IngredientModel(),
+            'productsTable' => $table,
         ]);
     }
 
@@ -125,15 +147,23 @@ class IngredientsController extends Controller
     /**
      * Редактирование ингредиента.
      *
+     * @param Datatables $dataTable
      * @param null $id
      * @return \Illuminate\Contracts\View\Factory|\Illuminate\View\View
      */
-    public function edit($id = null)
+    public function edit(Datatables $dataTable, $id = null)
     {
         if (! is_null($id) && $id > 0 && $item = IngredientModel::find($id)) {
 
+            $table = $dataTable->getHtmlBuilder();
+
+            $table->columns($this->getColumns('products'));
+            $table->ajax($this->getAjaxOptions('products', 'embedded'));
+            $table->parameters($this->getTableParameters());
+
             return view('admin.module.ingredients::pages.form', [
                 'item' => $item,
+                'productsTable' => $table,
             ]);
         } else {
             abort(404);
@@ -175,6 +205,7 @@ class IngredientsController extends Controller
         $item->save();
 
         $this->saveMeta($item, $request);
+        $this->saveProducts($item, $request);
         $this->saveImages($item, $request, ['og_image', 'preview', 'content']);
 
         Session::flash('success', 'Ингредиент «'.$item->title.'» успешно '.$action);
@@ -194,6 +225,27 @@ class IngredientsController extends Controller
             foreach ($request->get('meta') as $key => $value) {
                 $item->updateMeta($key, $value);
             }
+        }
+    }
+
+    /**
+     * Сохраняем продукты.
+     *
+     * @param IngredientModel $item
+     * @param SaveIngredientRequest $request
+     */
+    private function saveProducts($item, $request)
+    {
+        if ($request->has('products')) {
+            $ids = [];
+
+            foreach ($request->get('products') as $product) {
+                $ids[] = $product['id'];
+            }
+
+            $item->syncProducts($ids)->get();
+        } else {
+            $item->detachProducts($item->products);
         }
     }
 

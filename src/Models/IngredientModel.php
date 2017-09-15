@@ -6,6 +6,7 @@ use Cocur\Slugify\Slugify;
 use Phoenix\EloquentMeta\MetaTrait;
 use Illuminate\Database\Eloquent\Model;
 use Cviebrock\EloquentSluggable\Sluggable;
+use InetStudio\Products\Traits\HasProducts;
 use Illuminate\Database\Eloquent\SoftDeletes;
 use Spatie\MediaLibrary\HasMedia\HasMediaTrait;
 use Venturecraft\Revisionable\RevisionableTrait;
@@ -47,6 +48,7 @@ class IngredientModel extends Model implements HasMediaConversions
 {
     use MetaTrait;
     use Sluggable;
+    use HasProducts;
     use SoftDeletes;
     use HasMediaTrait;
     use RevisionableTrait;

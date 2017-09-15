@@ -6,6 +6,16 @@
 
 @section('title', $title)
 
+@pushonce('styles:datatables')
+    <!-- DATATABLES -->
+    <link href="{!! asset('admin/css/plugins/datatables/datatables.min.css') !!}" rel="stylesheet">
+@endpushonce
+
+@pushonce('styles:products_custom')
+    <!-- CUSTOM STYLE -->
+    <link href="{!! asset('admin/css/modules/products/custom.css') !!}" rel="stylesheet">
+@endpushonce
+
 @section('content')
 
     @push('breadcrumbs')
@@ -166,8 +176,24 @@
                 </div>
             </div>
 
+            {!! Form::products('products', $item->products, ['table' => $productsTable])!!}
+
             {!! Form::buttons('', '', ['back' => 'back.ingredients.index']) !!}
 
         {!! Form::close()!!}
     </div>
 @endsection
+
+@pushonce('scripts:datatables')
+    <!-- DATATABLES -->
+    <script src="{!! asset('admin/js/plugins/datatables/datatables.min.js') !!}"></script>
+@endpushonce
+
+@pushonce('scripts:datatable_products_embedded')
+    {!! $productsTable->scripts() !!}
+@endpushonce
+
+@pushonce('scripts:products_custom')
+    <!-- CUSTOM SCRIPT -->
+    <script src="{!! asset('admin/js/modules/products/custom.js') !!}"></script>
+@endpushonce

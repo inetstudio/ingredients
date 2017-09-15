@@ -107,11 +107,11 @@ class IngredientsController extends Controller
      */
     public function data()
     {
-        $items = IngredientModel::query();
+        $items = IngredientModel::with('status');
 
         return Datatables::of($items)
             ->setTransformer(new IngredientTransformer)
-            ->escapeColumns(['actions'])
+            ->escapeColumns(['status', 'actions'])
             ->make();
     }
 
@@ -204,7 +204,7 @@ class IngredientsController extends Controller
         $item->slug = strip_tags($request->get('slug'));
         $item->description = strip_tags($request->input('description.text'));
         $item->content = $request->input('content.text');
-        $item->status_id = $request->get('status_id');
+        $item->status_id = ($request->has('status_id')) ? $request->get('status_id') : 1;
         $item->save();
 
         $this->saveMeta($item, $request);

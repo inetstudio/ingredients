@@ -52,6 +52,8 @@
 
             {!! Form::hidden('ingredient_id', (!$item->id) ? '' : $item->id) !!}
 
+            {!! Form::buttons('', '', ['back' => 'back.ingredients.index']) !!}
+
             {!! Form::meta('', $item) !!}
 
             {!! Form::social_meta('', $item) !!}

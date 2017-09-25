@@ -212,6 +212,8 @@ class IngredientsController extends Controller
         $this->saveProducts($item, $request);
         $this->saveImages($item, $request, ['og_image', 'preview', 'content']);
 
+        \Event::fire('inetstudio.ingredients.cache.clear', $item);
+
         Session::flash('success', 'Ингредиент «'.$item->title.'» успешно '.$action);
 
         return redirect()->to(route('back.ingredients.edit', $item->fresh()->id));
@@ -229,6 +231,8 @@ class IngredientsController extends Controller
             foreach ($request->get('meta') as $key => $value) {
                 $item->updateMeta($key, $value);
             }
+
+            \Event::fire('inetstudio.seo.cache.clear', $item);
         }
     }
 
@@ -312,6 +316,9 @@ class IngredientsController extends Controller
                         $cropData = json_decode($cropJSON, true);
 
                         foreach (config('ingredients.images.conversions.'.$name.'.'.$key) as $conversion) {
+
+                            \Event::fire('inetstudio.images.cache.clear', $conversion['name'].'_'.md5(get_class($item).$item->id));
+
                             $manipulations[$conversion['name']] = [
                                 'manualCrop' => implode(',', [
                                     round($cropData['width']),

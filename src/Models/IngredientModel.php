@@ -14,6 +14,7 @@ use Illuminate\Database\Eloquent\SoftDeletes;
 use Spatie\MediaLibrary\HasMedia\HasMediaTrait;
 use Venturecraft\Revisionable\RevisionableTrait;
 use Cviebrock\EloquentSluggable\SluggableScopeHelpers;
+use InetStudio\SimpleCounters\Traits\HasSimpleCountersTrait;
 use Spatie\MediaLibrary\HasMedia\Interfaces\HasMediaConversions;
 
 /**
@@ -69,6 +70,7 @@ class IngredientModel extends Model implements HasMediaConversions
     use HasMediaTrait;
     use RevisionableTrait;
     use SluggableScopeHelpers;
+    use HasSimpleCountersTrait;
 
     const HREF = '/ingredient/';
 

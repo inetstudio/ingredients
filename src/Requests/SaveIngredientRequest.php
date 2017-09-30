@@ -37,6 +37,7 @@ class SaveIngredientRequest extends FormRequest
 
             'title.required' => 'Поле «Заголовок» обязательно для заполнения',
             'title.max' => 'Поле «Заголовок» не должно превышать 255 символов',
+            'title.unique' => 'Такое значение поля «Заголовок» уже существует',
 
             'slug.required' => 'Поле «URL» обязательно для заполнения',
             'slug.alpha_dash' => 'Поле «URL» может содержать только латинские символы, цифры, дефисы и подчеркивания',
@@ -70,7 +71,7 @@ class SaveIngredientRequest extends FormRequest
 
             'og_image.crop.default' => 'nullable|json|crop_size:968,475,min',
 
-            'title' => 'required|max:255',
+            'title' => 'required|max:255|unique:ingredients,title,'.$request->get('ingredient_id'),
             'slug' => 'required|alpha_dash|max:255|unique:ingredients,slug,'.$request->get('ingredient_id'),
 
             'preview.crop.default' => 'required|json|crop_size:300,280,min',

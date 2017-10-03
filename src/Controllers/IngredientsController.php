@@ -212,7 +212,7 @@ class IngredientsController extends Controller
         $this->saveProducts($item, $request);
         $this->saveImages($item, $request, ['og_image', 'preview', 'content']);
 
-        \Event::fire('inetstudio.ingredients.cache.clear', $item);
+        \Event::fire('inetstudio.ingredients.cache.clear');
 
         Session::flash('success', 'Ингредиент «'.$item->title.'» успешно '.$action);
 
@@ -377,6 +377,8 @@ class IngredientsController extends Controller
     {
         if (! is_null($id) && $id > 0 && $item = IngredientModel::find($id)) {
             $item->delete();
+
+            \Event::fire('inetstudio.ingredients.cache.clear');
 
             return response()->json([
                 'success' => true,

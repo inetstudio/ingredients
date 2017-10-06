@@ -60,7 +60,7 @@ trait HasIngredients
      *
      * @return void
      */
-    public static function bootIngredientable()
+    public static function bootHasIngredients()
     {
         static::created(function (Model $ingredientableModel) {
             if ($ingredientableModel->queuedIngredients) {

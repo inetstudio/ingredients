@@ -5,12 +5,15 @@ namespace InetStudio\Ingredients\Controllers;
 use Illuminate\Http\Request;
 use Yajra\Datatables\Datatables;
 use App\Http\Controllers\Controller;
-use InetStudio\Tags\Models\TagModel;
 use Illuminate\Support\Facades\Session;
-use Illuminate\Support\Facades\Storage;
+use InetStudio\AdminPanel\Traits\DatatablesTrait;
 use InetStudio\Ingredients\Models\IngredientModel;
-use InetStudio\Ingredients\Requests\SaveIngredientRequest;
+use InetStudio\Tags\Traits\TagsManipulationsTrait;
 use Cviebrock\EloquentSluggable\Services\SlugService;
+use InetStudio\AdminPanel\Traits\MetaManipulationsTrait;
+use InetStudio\AdminPanel\Traits\ImagesManipulationsTrait;
+use InetStudio\Ingredients\Requests\SaveIngredientRequest;
+use InetStudio\Products\Traits\ProductsManipulationsTrait;
 use InetStudio\Ingredients\Transformers\IngredientTransformer;
 
 /**
@@ -20,6 +23,12 @@ use InetStudio\Ingredients\Transformers\IngredientTransformer;
  */
 class IngredientsController extends Controller
 {
+    use DatatablesTrait;
+    use MetaManipulationsTrait;
+    use TagsManipulationsTrait;
+    use ImagesManipulationsTrait;
+    use ProductsManipulationsTrait;
+
     /**
      * Список ингредиентов.
      *
@@ -28,76 +37,9 @@ class IngredientsController extends Controller
      */
     public function index(Datatables $dataTable)
     {
-        $table = $dataTable->getHtmlBuilder();
-
-        $table->columns($this->getColumns('ingredients'));
-        $table->ajax($this->getAjaxOptions('ingredients'));
-        $table->parameters($this->getTableParameters());
+        $table = $this->generateTable($dataTable, 'ingredients', 'index');
 
         return view('admin.module.ingredients::pages.index', compact('table'));
-    }
-
-    /**
-     * Свойства колонок datatables.
-     *
-     * @param $model
-     * @return array
-     */
-    private function getColumns($model)
-    {
-        if ($model == 'ingredients') {
-            return [
-                ['data' => 'title', 'name' => 'title', 'title' => 'Заголовок'],
-                ['data' => 'status', 'name' => 'status.name', 'title' => 'Статус', 'orderable' => false],
-                ['data' => 'created_at', 'name' => 'created_at', 'title' => 'Дата создания'],
-                ['data' => 'updated_at', 'name' => 'updated_at', 'title' => 'Дата обновления'],
-                ['data' => 'actions', 'name' => 'actions', 'title' => 'Действия', 'orderable' => false, 'searchable' => false],
-            ];
-        } elseif ($model == 'products') {
-            return [
-                ['data' => 'id', 'name' => 'id', 'title' => 'ID', 'orderable' => false, 'searchable' => false, 'visible' => false],
-                ['data' => 'preview', 'name' => 'preview', 'title' => 'Изображение', 'orderable' => false, 'searchable' => false],
-                ['data' => 'brand', 'name' => 'brand', 'title' => 'Бренд'],
-                ['data' => 'title', 'name' => 'title', 'title' => 'Название'],
-                ['data' => 'description', 'name' => 'description', 'title' => 'Описание'],
-                ['data' => 'actions', 'name' => 'actions', 'title' => 'Действия', 'orderable' => false, 'searchable' => false],
-            ];
-        }
-    }
-
-    /**
-     * Свойства ajax datatables.
-     *
-     * @param $model
-     * @param $type
-     * @return array
-     */
-    private function getAjaxOptions($model, $type = '')
-    {
-        return [
-            'url' => (! $type) ? route('back.'.$model.'.data') : route('back.'.$model.'.data', ['type' => $type]),
-            'type' => 'POST',
-            'data' => 'function(data) { data._token = $(\'meta[name="csrf-token"]\').attr(\'content\'); }',
-        ];
-    }
-
-    /**
-     * Свойства datatables.
-     *
-     * @return array
-     */
-    private function getTableParameters()
-    {
-        return [
-            'paging' => true,
-            'pagingType' => 'full_numbers',
-            'searching' => true,
-            'info' => false,
-            'searchDelay' => 350,
-            'language' => [
-                'url' => asset('admin/js/plugins/datatables/locales/russian.json'),
-            ],
-        ];
     }
 
     /**
@@ -123,11 +65,7 @@ class IngredientsController extends Controller
      */
     public function create(Datatables $dataTable)
     {
-        $table = $dataTable->getHtmlBuilder();
-
-        $table->columns($this->getColumns('products'));
-        $table->ajax($this->getAjaxOptions('products', 'embedded'));
-        $table->parameters($this->getTableParameters());
+        $table = $this->generateTable($dataTable, 'products', 'embedded');
 
         return view('admin.module.ingredients::pages.form', [
             'item' => new IngredientModel(),
@@ -157,11 +95,7 @@ class IngredientsController extends Controller
     {
         if (! is_null($id) && $id > 0 && $item = IngredientModel::find($id)) {
 
-            $table = $dataTable->getHtmlBuilder();
-
-            $table->columns($this->getColumns('products'));
-            $table->ajax($this->getAjaxOptions('products', 'embedded'));
-            $table->parameters($this->getTableParameters());
+            $table = $this->generateTable($dataTable, 'products', 'embedded');
 
             return view('admin.module.ingredients::pages.form', [
                 'item' => $item,
@@ -210,161 +144,13 @@ class IngredientsController extends Controller
         $this->saveMeta($item, $request);
         $this->saveTags($item, $request);
         $this->saveProducts($item, $request);
-        $this->saveImages($item, $request, ['og_image', 'preview', 'content']);
+        $this->saveImages($item, $request, ['og_image', 'preview', 'content'], 'ingredients');
 
         \Event::fire('inetstudio.ingredients.cache.clear');
 
         Session::flash('success', 'Ингредиент «'.$item->title.'» успешно '.$action);
 
         return redirect()->to(route('back.ingredients.edit', $item->fresh()->id));
-    }
-
-    /**
-     * Сохраняем мета теги.
-     *
-     * @param IngredientModel $item
-     * @param SaveIngredientRequest $request
-     */
-    private function saveMeta($item, $request)
-    {
-        if ($request->has('meta')) {
-            foreach ($request->get('meta') as $key => $value) {
-                $item->updateMeta($key, $value);
-            }
-
-            \Event::fire('inetstudio.seo.cache.clear', $item);
-        }
-    }
-
-    /**
-     * Сохраняем теги.
-     *
-     * @param IngredientModel $item
-     * @param SaveIngredientRequest $request
-     */
-    private function saveTags($item, $request)
-    {
-        if ($request->has('tags')) {
-            $item->syncTags(TagModel::whereIn('id', (array) $request->get('tags'))->get());
-        } else {
-            $item->detachTags($item->tags);
-        }
-    }
-
-    /**
-     * Сохраняем продукты.
-     *
-     * @param IngredientModel $item
-     * @param SaveIngredientRequest $request
-     */
-    private function saveProducts($item, $request)
-    {
-        if ($request->has('products')) {
-            $ids = [];
-
-            foreach ($request->get('products') as $product) {
-                $ids[] = $product['id'];
-            }
-
-            $item->syncProducts($ids)->get();
-        } else {
-            $item->detachProducts($item->products);
-        }
-    }
-
-    /**
-     * Сохраняем изображения.
-     *
-     * @param IngredientModel $item
-     * @param SaveIngredientRequest $request
-     * @param array $images
-     */
-    private function saveImages($item, $request, $images)
-    {
-        foreach ($images as $name) {
-            $properties = $request->get($name);
-
-            \Event::fire('inetstudio.images.cache.clear', $name.'_'.md5(get_class($item).$item->id));
-
-            if (isset($properties['images'])) {
-                $item->clearMediaCollectionExcept($name, $properties['images']);
-
-                foreach ($properties['images'] as $image) {
-                    if ($image['id']) {
-                        $media = $item->media->find($image['id']);
-                        $media->custom_properties = $image['properties'];
-                        $media->save();
-                    } else {
-                        $filename = $image['filename'];
-
-                        $file = Storage::disk('temp')->getDriver()->getAdapter()->getPathPrefix().$image['tempname'];
-
-                        $media = $item->addMedia($file)
-                            ->withCustomProperties($image['properties'])
-                            ->usingName(pathinfo($filename, PATHINFO_FILENAME))
-                            ->usingFileName($image['tempname'])
-                            ->toMediaCollection($name, 'ingredients');
-                    }
-
-                    $item->update([
-                        $name => str_replace($image['src'], $media->getFullUrl('content_front'), $item[$name]),
-                    ]);
-                }
-            } else {
-                $manipulations = [];
-
-                if (isset($properties['crop']) and config('ingredients.images.conversions')) {
-                    foreach ($properties['crop'] as $key => $cropJSON) {
-                        $cropData = json_decode($cropJSON, true);
-
-                        foreach (config('ingredients.images.conversions.'.$name.'.'.$key) as $conversion) {
-
-                            \Event::fire('inetstudio.images.cache.clear', $conversion['name'].'_'.md5(get_class($item).$item->id));
-
-                            $manipulations[$conversion['name']] = [
-                                'manualCrop' => implode(',', [
-                                    round($cropData['width']),
-                                    round($cropData['height']),
-                                    round($cropData['x']),
-                                    round($cropData['y']),
-                                ]),
-                            ];
-                        }
-                    }
-                }
-
-                if (isset($properties['tempname']) && isset($properties['filename'])) {
-                    $image = $properties['tempname'];
-                    $filename = $properties['filename'];
-
-                    $item->clearMediaCollection($name);
-
-                    array_forget($properties, ['tempname', 'temppath', 'filename']);
-                    $properties = array_filter($properties);
-
-                    $file = Storage::disk('temp')->getDriver()->getAdapter()->getPathPrefix().$image;
-
-                    $media = $item->addMedia($file)
-                        ->withCustomProperties($properties)
-                        ->usingName(pathinfo($filename, PATHINFO_FILENAME))
-                        ->usingFileName($image)
-                        ->toMediaCollection($name, 'ingredients');
-
-                    $media->manipulations = $manipulations;
-                    $media->save();
-                } else {
-                    $properties = array_filter($properties);
-
-                    $media = $item->getFirstMedia($name);
-
-                    if ($media) {
-                        $media->custom_properties = $properties;
-                        $media->manipulations = $manipulations;
-                        $media->save();
-                    }
-                }
-            }
-        }
     }
 
     /**

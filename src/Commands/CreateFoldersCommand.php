@@ -25,7 +25,7 @@ class CreateFoldersCommand extends Command
      *
      * @return void
      */
-    public function fire()
+    public function handle()
     {
         if (config('filesystems.disks.ingredients')) {
             $path = config('filesystems.disks.ingredients.root');

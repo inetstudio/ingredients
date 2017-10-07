@@ -14,7 +14,7 @@ trait IngredientsManipulationsTrait
      */
     private function saveIngredients($item, $request)
     {
-        if ($request->has('ingredients')) {
+        if ($request->filled('ingredients')) {
             $item->syncIngredients(IngredientModel::whereIn('id', (array) $request->get('ingredients'))->get());
         } else {
             $item->detachIngredients($item->categories);

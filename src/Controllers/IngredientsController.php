@@ -138,7 +138,7 @@ class IngredientsController extends Controller
         $item->slug = strip_tags($request->get('slug'));
         $item->description = strip_tags($request->input('description.text'));
         $item->content = $request->input('content.text');
-        $item->status_id = ($request->has('status_id')) ? $request->get('status_id') : 1;
+        $item->status_id = ($request->filled('status_id')) ? $request->get('status_id') : 1;
         $item->save();
 
         $this->saveMeta($item, $request);
@@ -198,7 +198,7 @@ class IngredientsController extends Controller
      */
     public function getSuggestions(Request $request)
     {
-        if ($request->has('type') && $request->get('type') == 'autocomplete') {
+        if ($request->filled('type') && $request->get('type') == 'autocomplete') {
             $search = $request->get('query');
             $data['suggestions'] = [];
 

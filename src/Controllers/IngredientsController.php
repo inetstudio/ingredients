@@ -3,7 +3,7 @@
 namespace InetStudio\Ingredients\Controllers;
 
 use Illuminate\Http\Request;
-use Yajra\Datatables\Datatables;
+use Yajra\DataTables\DataTables;
 use App\Http\Controllers\Controller;
 use Illuminate\Support\Facades\Session;
 use InetStudio\AdminPanel\Traits\DatatablesTrait;
@@ -32,10 +32,10 @@ class IngredientsController extends Controller
     /**
      * Список ингредиентов.
      *
-     * @param Datatables $dataTable
+     * @param DataTables $dataTable
      * @return \Illuminate\Contracts\View\Factory|\Illuminate\View\View
      */
-    public function index(Datatables $dataTable)
+    public function index(DataTables $dataTable)
     {
         $table = $this->generateTable($dataTable, 'ingredients', 'index');
 
@@ -51,19 +51,19 @@ class IngredientsController extends Controller
     {
         $items = IngredientModel::with('status');
 
-        return Datatables::of($items)
+        return DataTables::of($items)
             ->setTransformer(new IngredientTransformer)
-            ->escapeColumns(['status', 'actions'])
+            ->rawColumns(['status', 'actions'])
             ->make();
     }
 
     /**
      * Добавление ингредиента.
      *
-     * @param Datatables $dataTable
+     * @param DataTables $dataTable
      * @return \Illuminate\Contracts\View\Factory|\Illuminate\View\View
      */
-    public function create(Datatables $dataTable)
+    public function create(DataTables $dataTable)
     {
         $table = $this->generateTable($dataTable, 'products', 'embedded');
 
@@ -87,11 +87,11 @@ class IngredientsController extends Controller
     /**
      * Редактирование ингредиента.
      *
-     * @param Datatables $dataTable
+     * @param DataTables $dataTable
      * @param null $id
      * @return \Illuminate\Contracts\View\Factory|\Illuminate\View\View
      */
-    public function edit(Datatables $dataTable, $id = null)
+    public function edit(DataTables $dataTable, $id = null)
     {
         if (! is_null($id) && $id > 0 && $item = IngredientModel::find($id)) {
 

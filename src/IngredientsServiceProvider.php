@@ -41,6 +41,5 @@ class IngredientsServiceProvider extends ServiceProvider
      */
     public function register()
     {
-
     }
 }

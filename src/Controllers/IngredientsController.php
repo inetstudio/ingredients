@@ -94,7 +94,6 @@ class IngredientsController extends Controller
     public function edit(DataTables $dataTable, $id = null)
     {
         if (! is_null($id) && $id > 0 && $item = IngredientModel::find($id)) {
-
             $table = $this->generateTable($dataTable, 'products', 'embedded');
 
             return view('admin.module.ingredients::pages.form', [
@@ -214,7 +213,7 @@ class IngredientsController extends Controller
                         'title' => $ingredient->title,
                         'href' => url($ingredient->href),
                         'preview' => ($ingredient->getFirstMedia('preview')) ? url($ingredient->getFirstMedia('preview')->getUrl('preview_default')) : '',
-                    ]
+                    ],
                 ];
             }
         } else {

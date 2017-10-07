@@ -19,7 +19,7 @@ use InetStudio\SimpleCounters\Traits\HasSimpleCountersTrait;
 use Spatie\MediaLibrary\HasMedia\Interfaces\HasMediaConversions;
 
 /**
- * InetStudio\Ingredients\Models\IngredientModel
+ * InetStudio\Ingredients\Models\IngredientModel.
  *
  * @property int $id
  * @property string $title
@@ -157,7 +157,7 @@ class IngredientModel extends Model implements HasMediaConversions
      */
     public function getHrefAttribute()
     {
-        return url(self::HREF . (!empty($this->slug) ? $this->slug : $this->id));
+        return url(self::HREF.(! empty($this->slug) ? $this->slug : $this->id));
     }
 
     /**

@@ -198,6 +198,8 @@ class IngredientsController extends Controller
      */
     public function getSuggestions(Request $request)
     {
+        $data = [];
+
         if ($request->filled('type') && $request->get('type') == 'autocomplete') {
             $search = $request->get('query');
             $data['suggestions'] = [];
@@ -217,7 +219,6 @@ class IngredientsController extends Controller
             }
         } else {
             $search = $request->get('q');
-            $data = [];
 
             $data['items'] = IngredientModel::select(['id', 'title as name'])->where('title', 'LIKE', '%'.$search.'%')->get()->toArray();
         }

@@ -145,6 +145,9 @@ class IngredientsController extends Controller
         $this->saveProducts($item, $request);
         $this->saveImages($item, $request, ['og_image', 'preview', 'content'], 'ingredients');
 
+        // Обновление поискового индекса.
+        $item->searchable();
+
         \Event::fire('inetstudio.ingredients.cache.clear');
 
         Session::flash('success', 'Ингредиент «'.$item->title.'» успешно '.$action);

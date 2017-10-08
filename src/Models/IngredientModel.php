@@ -4,6 +4,7 @@ namespace InetStudio\Ingredients\Models;
 
 use Spatie\Tags\HasTags;
 use Cocur\Slugify\Slugify;
+use Laravel\Scout\Searchable;
 use Spatie\MediaLibrary\Media;
 use Phoenix\EloquentMeta\MetaTrait;
 use InetStudio\Tags\Models\TagModel;
@@ -66,6 +67,7 @@ class IngredientModel extends Model implements HasMediaConversions
     use HasTags;
     use MetaTrait;
     use Sluggable;
+    use Searchable;
     use HasProducts;
     use SoftDeletes;
     use HasMediaTrait;
@@ -113,6 +115,26 @@ class IngredientModel extends Model implements HasMediaConversions
     public function status()
     {
         return $this->hasOne(StatusModel::class, 'id', 'status_id');
+    }
+
+    /**
+     * Настройка полей для поиска.
+     *
+     * @return array
+     */
+    public function toSearchableArray()
+    {
+        $arr = array_only($this->toArray(), ['id', 'title', 'description', 'content']);
+
+        $arr['tags'] = $this->tags->map(function ($item) {
+            return array_only($item->toSearchableArray(), ['id', 'name']);
+        })->toArray();
+
+        $arr['products'] = $this->products->map(function ($item) {
+            return array_only($item->toSearchableArray(), ['id', 'title']);
+        })->toArray();
+
+        return $arr;
     }
 
     /**

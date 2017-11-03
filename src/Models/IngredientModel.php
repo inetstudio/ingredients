@@ -17,6 +17,7 @@ use Illuminate\Database\Eloquent\SoftDeletes;
 use Spatie\MediaLibrary\HasMedia\HasMediaTrait;
 use Venturecraft\Revisionable\RevisionableTrait;
 use Cviebrock\EloquentSluggable\SluggableScopeHelpers;
+use InetStudio\Classifiers\Models\Traits\HasClassifiers;
 use InetStudio\SimpleCounters\Traits\HasSimpleCountersTrait;
 use Spatie\MediaLibrary\HasMedia\Interfaces\HasMediaConversions;
 
@@ -73,6 +74,7 @@ class IngredientModel extends Model implements HasMediaConversions
     use HasProducts;
     use SoftDeletes;
     use HasMediaTrait;
+    use HasClassifiers;
     use RevisionableTrait;
     use SluggableScopeHelpers;
     use HasSimpleCountersTrait;

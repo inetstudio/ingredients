@@ -213,6 +213,20 @@
                                         'options' => (old('tags')) ? \InetStudio\Tags\Models\TagModel::whereIn('id', old('tags'))->pluck('name', 'id')->toArray() : $item->tags()->pluck('name', 'id')->toArray(),
                                     ]) !!}
 
+                                    {!! Form::dropdown('classifiers[]', $item->classifiers()->where('type', 'Тип кожи')->pluck('classifiers.id')->toArray(), [
+                                        'label' => [
+                                            'title' => 'Тип кожи',
+                                        ],
+                                        'field' => [
+                                            'class' => 'select2 form-control',
+                                            'data-placeholder' => 'Выберите типы кожи',
+                                            'style' => 'width: 100%',
+                                            'multiple' => 'multiple',
+                                            'data-source' => route('back.classifiers.getSuggestions', ['type' => 'Тип кожи']),
+                                        ],
+                                        'options' => (old('classifiers')) ? \InetStudio\Classifiers\Models\ClassifierModel::whereIn('id', old('classifiers'))->where('type', 'Тип кожи')->pluck('classifiers.value', 'classifiers.id')->toArray() : $item->classifiers()->where('type', 'Тип кожи')->pluck('classifiers.value', 'classifiers.id')->toArray(),
+                                    ]) !!}
+
                                     {!! Form::dropdown('status_id', $item->status_id, [
                                         'label' => [
                                             'title' => 'Статус материала',

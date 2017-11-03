@@ -15,6 +15,7 @@ use InetStudio\AdminPanel\Traits\ImagesManipulationsTrait;
 use InetStudio\Ingredients\Requests\SaveIngredientRequest;
 use InetStudio\Products\Traits\ProductsManipulationsTrait;
 use InetStudio\Ingredients\Transformers\IngredientTransformer;
+use InetStudio\Classifiers\Http\Controllers\Back\Traits\ClassifiersManipulationsTrait;
 
 /**
  * Контроллер для управления ингредиентами.
@@ -28,6 +29,7 @@ class IngredientsController extends Controller
     use TagsManipulationsTrait;
     use ImagesManipulationsTrait;
     use ProductsManipulationsTrait;
+    use ClassifiersManipulationsTrait;
 
     /**
      * Список ингредиентов.
@@ -142,6 +144,7 @@ class IngredientsController extends Controller
 
         $this->saveMeta($item, $request);
         $this->saveTags($item, $request);
+        $this->saveClassifiers($item, $request);
         $this->saveProducts($item, $request);
         $this->saveImages($item, $request, ['og_image', 'preview', 'content'], 'ingredients');
 

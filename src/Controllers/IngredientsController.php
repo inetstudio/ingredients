@@ -6,15 +6,15 @@ use Illuminate\Http\Request;
 use Yajra\DataTables\DataTables;
 use App\Http\Controllers\Controller;
 use Illuminate\Support\Facades\Session;
-use InetStudio\AdminPanel\Traits\DatatablesTrait;
 use InetStudio\Ingredients\Models\IngredientModel;
 use InetStudio\Tags\Traits\TagsManipulationsTrait;
 use Cviebrock\EloquentSluggable\Services\SlugService;
-use InetStudio\AdminPanel\Traits\MetaManipulationsTrait;
-use InetStudio\AdminPanel\Traits\ImagesManipulationsTrait;
 use InetStudio\Ingredients\Requests\SaveIngredientRequest;
 use InetStudio\Products\Traits\ProductsManipulationsTrait;
 use InetStudio\Ingredients\Transformers\IngredientTransformer;
+use InetStudio\AdminPanel\Http\Controllers\Back\Traits\DatatablesTrait;
+use InetStudio\AdminPanel\Http\Controllers\Back\Traits\MetaManipulationsTrait;
+use InetStudio\AdminPanel\Http\Controllers\Back\Traits\ImagesManipulationsTrait;
 use InetStudio\Classifiers\Http\Controllers\Back\Traits\ClassifiersManipulationsTrait;
 
 /**

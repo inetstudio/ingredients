@@ -83,6 +83,7 @@ class IngredientModel extends Model implements HasMediaConversions, LikeableCont
     use HasSimpleCountersTrait;
 
     const HREF = '/ingredient/';
+    const MATERIAL_TYPE = 'ingredient';
 
     /**
      * Связанная с моделью таблица.
@@ -187,6 +188,16 @@ class IngredientModel extends Model implements HasMediaConversions, LikeableCont
     public function getHrefAttribute()
     {
         return url(self::HREF.(! empty($this->slug) ? $this->slug : $this->id));
+    }
+
+    /**
+     * Тип материала.
+     *
+     * @return string
+     */
+    public function getTypeAttribute()
+    {
+        return self::MATERIAL_TYPE;
     }
 
     /**

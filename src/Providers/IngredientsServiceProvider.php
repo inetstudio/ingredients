@@ -57,7 +57,7 @@ class IngredientsServiceProvider extends ServiceProvider
     protected function registerPublishes(): void
     {
         $this->publishes([
-            __DIR__.'/../../config/comments.php' => config_path('ingredients.php'),
+            __DIR__.'/../../config/ingredients.php' => config_path('ingredients.php'),
         ], 'config');
 
         $this->mergeConfigFrom(

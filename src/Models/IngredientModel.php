@@ -14,6 +14,7 @@ use Cviebrock\EloquentSluggable\Sluggable;
 use InetStudio\Products\Traits\HasProducts;
 use InetStudio\Statuses\Models\StatusModel;
 use Illuminate\Database\Eloquent\SoftDeletes;
+use InetStudio\Rating\Models\Traits\Rateable;
 use Spatie\MediaLibrary\HasMedia\HasMediaTrait;
 use Venturecraft\Revisionable\RevisionableTrait;
 use InetStudio\Comments\Models\Traits\HasComments;
@@ -21,6 +22,7 @@ use Cviebrock\EloquentSluggable\SluggableScopeHelpers;
 use Cog\Likeable\Contracts\Likeable as LikeableContract;
 use InetStudio\Classifiers\Models\Traits\HasClassifiers;
 use InetStudio\SimpleCounters\Traits\HasSimpleCountersTrait;
+use InetStudio\Rating\Contracts\Models\Traits\RateableContract;
 use Spatie\MediaLibrary\HasMedia\Interfaces\HasMediaConversions;
 
 /**
@@ -66,10 +68,11 @@ use Spatie\MediaLibrary\HasMedia\Interfaces\HasMediaConversions;
  * @method static \Illuminate\Database\Query\Builder|\InetStudio\Ingredients\Models\IngredientModel withoutTrashed()
  * @mixin \Eloquent
  */
-class IngredientModel extends Model implements HasMediaConversions, LikeableContract
+class IngredientModel extends Model implements HasMediaConversions, LikeableContract, RateableContract
 {
     use HasTags;
     use Likeable;
+    use Rateable;
     use MetaTrait;
     use Sluggable;
     use Searchable;

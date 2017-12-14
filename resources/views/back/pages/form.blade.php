@@ -19,7 +19,7 @@
 @section('content')
 
     @push('breadcrumbs')
-        @include('admin.module.ingredients::partials.breadcrumbs')
+        @include('admin.module.ingredients::back.partials.breadcrumbs')
         <li>
             <a href="{{ route('back.ingredients.index') }}">Ингредиенты</a>
         </li>
@@ -253,9 +253,9 @@
         {!! Form::close()!!}
     </div>
 
-    @include('admin.module.articles::pages.modals.suggestion')
+    @include('admin.module.articles::back.pages.modals.suggestion')
     @include('admin.module.experts::pages.modals.suggestion')
-    @include('admin.module.ingredients::pages.modals.suggestion')
+    @include('admin.module.ingredients::back.pages.modals.suggestion')
     @include('admin.module.polls::pages.modals.form')
 
 @endsection

@@ -16,7 +16,8 @@
       "inetstudio/comments": "1.5.*",
       "inetstudio/experts": "1.5.*",
       "inetstudio/polls": "1.5.*",
-      "inetstudio/products": "1.5.*"
+      "inetstudio/products": "1.5.*",
+      "inetstudio/rating": "1.5.*"
     },
     "autoload": {
       "psr-4": {
@@ -26,7 +27,7 @@
     "extra": {
       "laravel": {
         "providers": [
-          "InetStudio\\Ingredients\\IngredientsServiceProvider"
+          "InetStudio\\Ingredients\\Providers\\IngredientsServiceProvider"
         ]
       }
     }

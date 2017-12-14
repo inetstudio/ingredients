@@ -1,17 +1,21 @@
 <?php
 
-namespace InetStudio\Ingredients\Controllers;
+namespace InetStudio\Ingredients\Http\Controllers\Back;
 
+use Illuminate\View\View;
 use Illuminate\Http\Request;
 use Yajra\DataTables\DataTables;
+use Illuminate\Http\JsonResponse;
 use App\Http\Controllers\Controller;
+use Illuminate\Http\RedirectResponse;
 use Illuminate\Support\Facades\Session;
 use InetStudio\Ingredients\Models\IngredientModel;
 use InetStudio\Tags\Traits\TagsManipulationsTrait;
 use Cviebrock\EloquentSluggable\Services\SlugService;
-use InetStudio\Ingredients\Requests\SaveIngredientRequest;
+use InetStudio\Ingredients\Events\ModifyIngredientEvent;
 use InetStudio\Products\Traits\ProductsManipulationsTrait;
 use InetStudio\Ingredients\Transformers\IngredientTransformer;
+use InetStudio\Ingredients\Http\Requests\Back\SaveIngredientRequest;
 use InetStudio\AdminPanel\Http\Controllers\Back\Traits\DatatablesTrait;
 use InetStudio\AdminPanel\Http\Controllers\Back\Traits\MetaManipulationsTrait;
 use InetStudio\AdminPanel\Http\Controllers\Back\Traits\ImagesManipulationsTrait;
@@ -37,11 +41,11 @@ class IngredientsController extends Controller
      * @param DataTables $dataTable
      * @return \Illuminate\Contracts\View\Factory|\Illuminate\View\View
      */
-    public function index(DataTables $dataTable)
+    public function index(DataTables $dataTable): View
     {
         $table = $this->generateTable($dataTable, 'ingredients', 'index');
 
-        return view('admin.module.ingredients::pages.index', compact('table'));
+        return view('admin.module.ingredients::back.pages.index', compact('table'));
     }
 
     /**
@@ -65,11 +69,11 @@ class IngredientsController extends Controller
      * @param DataTables $dataTable
      * @return \Illuminate\Contracts\View\Factory|\Illuminate\View\View
      */
-    public function create(DataTables $dataTable)
+    public function create(DataTables $dataTable): View
     {
         $table = $this->generateTable($dataTable, 'products', 'embedded');
 
-        return view('admin.module.ingredients::pages.form', [
+        return view('admin.module.ingredients::back.pages.form', [
             'item' => new IngredientModel(),
             'productsTable' => $table,
         ]);
@@ -81,7 +85,7 @@ class IngredientsController extends Controller
      * @param SaveIngredientRequest $request
      * @return \Illuminate\Http\RedirectResponse
      */
-    public function store(SaveIngredientRequest $request)
+    public function store(SaveIngredientRequest $request): RedirectResponse
     {
         return $this->save($request);
     }
@@ -93,12 +97,12 @@ class IngredientsController extends Controller
      * @param null $id
      * @return \Illuminate\Contracts\View\Factory|\Illuminate\View\View
      */
-    public function edit(DataTables $dataTable, $id = null)
+    public function edit(DataTables $dataTable, $id = null): View
     {
         if (! is_null($id) && $id > 0 && $item = IngredientModel::find($id)) {
             $table = $this->generateTable($dataTable, 'products', 'embedded');
 
-            return view('admin.module.ingredients::pages.form', [
+            return view('admin.module.ingredients::back.pages.form', [
                 'item' => $item,
                 'productsTable' => $table,
             ]);
@@ -114,7 +118,7 @@ class IngredientsController extends Controller
      * @param null $id
      * @return \Illuminate\Http\RedirectResponse
      */
-    public function update(SaveIngredientRequest $request, $id = null)
+    public function update(SaveIngredientRequest $request, $id = null): RedirectResponse
     {
         return $this->save($request, $id);
     }
@@ -126,7 +130,7 @@ class IngredientsController extends Controller
      * @param null $id
      * @return \Illuminate\Http\RedirectResponse
      */
-    private function save($request, $id = null)
+    private function save($request, $id = null): RedirectResponse
     {
         if (! is_null($id) && $id > 0 && $item = IngredientModel::find($id)) {
             $action = 'отредактирован';
@@ -151,11 +155,11 @@ class IngredientsController extends Controller
         // Обновление поискового индекса.
         $item->searchable();
 
-        \Event::fire('inetstudio.ingredients.cache.clear');
+        event(new ModifyIngredientEvent($item));
 
         Session::flash('success', 'Ингредиент «'.$item->title.'» успешно '.$action);
 
-        return redirect()->to(route('back.ingredients.edit', $item->fresh()->id));
+        return response()->redirectToRoute('back.ingredients.edit', $item->fresh()->id);
     }
 
     /**
@@ -164,12 +168,12 @@ class IngredientsController extends Controller
      * @param null $id
      * @return \Illuminate\Http\JsonResponse
      */
-    public function destroy($id = null)
+    public function destroy($id = null): JsonResponse
     {
         if (! is_null($id) && $id > 0 && $item = IngredientModel::find($id)) {
             $item->delete();
 
-            \Event::fire('inetstudio.ingredients.cache.clear');
+            event(new ModifyIngredientEvent($item));
 
             return response()->json([
                 'success' => true,
@@ -187,7 +191,7 @@ class IngredientsController extends Controller
      * @param Request $request
      * @return \Illuminate\Http\JsonResponse
      */
-    public function getSlug(Request $request)
+    public function getSlug(Request $request): JsonResponse
     {
         $name = $request->get('name');
         $slug = SlugService::createSlug(IngredientModel::class, 'slug', $name);
@@ -201,7 +205,7 @@ class IngredientsController extends Controller
      * @param Request $request
      * @return \Illuminate\Http\JsonResponse
      */
-    public function getSuggestions(Request $request)
+    public function getSuggestions(Request $request): JsonResponse
     {
         $data = [];
 

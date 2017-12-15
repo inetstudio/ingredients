@@ -21,9 +21,9 @@ use InetStudio\Comments\Models\Traits\HasComments;
 use Cviebrock\EloquentSluggable\SluggableScopeHelpers;
 use Cog\Likeable\Contracts\Likeable as LikeableContract;
 use InetStudio\Classifiers\Models\Traits\HasClassifiers;
-use InetStudio\SimpleCounters\Traits\HasSimpleCountersTrait;
 use InetStudio\Rating\Contracts\Models\Traits\RateableContract;
 use Spatie\MediaLibrary\HasMedia\Interfaces\HasMediaConversions;
+use InetStudio\SimpleCounters\Models\Traits\HasSimpleCountersTrait;
 
 /**
  * InetStudio\Ingredients\Models\IngredientModel.

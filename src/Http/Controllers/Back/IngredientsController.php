@@ -12,13 +12,13 @@ use Illuminate\Support\Facades\Session;
 use InetStudio\Ingredients\Models\IngredientModel;
 use Cviebrock\EloquentSluggable\Services\SlugService;
 use InetStudio\Ingredients\Events\ModifyIngredientEvent;
-use InetStudio\Products\Traits\ProductsManipulationsTrait;
 use InetStudio\Ingredients\Transformers\IngredientTransformer;
 use InetStudio\Ingredients\Http\Requests\Back\SaveIngredientRequest;
 use InetStudio\AdminPanel\Http\Controllers\Back\Traits\DatatablesTrait;
 use InetStudio\Tags\Http\Controllers\Back\Traits\TagsManipulationsTrait;
 use InetStudio\AdminPanel\Http\Controllers\Back\Traits\MetaManipulationsTrait;
 use InetStudio\AdminPanel\Http\Controllers\Back\Traits\ImagesManipulationsTrait;
+use InetStudio\Products\Http\Controllers\Back\Traits\ProductsManipulationsTrait;
 use InetStudio\Classifiers\Http\Controllers\Back\Traits\ClassifiersManipulationsTrait;
 
 /**

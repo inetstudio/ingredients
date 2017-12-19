@@ -15,8 +15,8 @@ use InetStudio\Ingredients\Events\ModifyIngredientEvent;
 use InetStudio\Ingredients\Transformers\IngredientTransformer;
 use InetStudio\Ingredients\Http\Requests\Back\SaveIngredientRequest;
 use InetStudio\AdminPanel\Http\Controllers\Back\Traits\DatatablesTrait;
+use InetStudio\Meta\Http\Controllers\Back\Traits\MetaManipulationsTrait;
 use InetStudio\Tags\Http\Controllers\Back\Traits\TagsManipulationsTrait;
-use InetStudio\AdminPanel\Http\Controllers\Back\Traits\MetaManipulationsTrait;
 use InetStudio\AdminPanel\Http\Controllers\Back\Traits\ImagesManipulationsTrait;
 use InetStudio\Products\Http\Controllers\Back\Traits\ProductsManipulationsTrait;
 use InetStudio\Classifiers\Http\Controllers\Back\Traits\ClassifiersManipulationsTrait;
@@ -40,6 +40,7 @@ class IngredientsController extends Controller
      *
      * @param DataTables $dataTable
      * @return \Illuminate\Contracts\View\Factory|\Illuminate\View\View
+     * @throws \Exception
      */
     public function index(DataTables $dataTable): View
     {
@@ -49,9 +50,10 @@ class IngredientsController extends Controller
     }
 
     /**
-     * Datatables serverside.
+     * DataTables ServerSide.
      *
      * @return mixed
+     * @throws \Exception
      */
     public function data()
     {
@@ -68,6 +70,7 @@ class IngredientsController extends Controller
      *
      * @param DataTables $dataTable
      * @return \Illuminate\Contracts\View\Factory|\Illuminate\View\View
+     * @throws \Exception
      */
     public function create(DataTables $dataTable): View
     {
@@ -96,6 +99,7 @@ class IngredientsController extends Controller
      * @param DataTables $dataTable
      * @param null $id
      * @return \Illuminate\Contracts\View\Factory|\Illuminate\View\View
+     * @throws \Exception
      */
     public function edit(DataTables $dataTable, $id = null): View
     {
@@ -159,7 +163,9 @@ class IngredientsController extends Controller
 
         Session::flash('success', 'Ингредиент «'.$item->title.'» успешно '.$action);
 
-        return response()->redirectToRoute('back.ingredients.edit', $item->fresh()->id);
+        return response()->redirectToRoute('back.ingredients.edit', [
+            $item->fresh()->id,
+        ]);
     }
 
     /**

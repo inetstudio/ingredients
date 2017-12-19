@@ -27,45 +27,74 @@ use InetStudio\Rating\Contracts\Models\Traits\RateableContract;
 use Spatie\MediaLibrary\HasMedia\Interfaces\HasMediaConversions;
 use InetStudio\SimpleCounters\Models\Traits\HasSimpleCountersTrait;
 
+
 /**
- * InetStudio\Ingredients\Models\IngredientModel.
+ * InetStudio\Ingredients\Models\IngredientModel
  *
  * @property int $id
  * @property string $title
  * @property string $slug
  * @property string|null $description
  * @property string|null $content
- * @property int|null $status_id
+ * @property int $status_id
  * @property \Carbon\Carbon|null $created_at
  * @property \Carbon\Carbon|null $updated_at
  * @property \Carbon\Carbon|null $deleted_at
+ * @property \Illuminate\Database\Eloquent\Collection|\InetStudio\Classifiers\Models\ClassifierModel[] $classifiers
+ * @property-read \Kalnoy\Nestedset\Collection|\InetStudio\Comments\Models\CommentModel[] $comments
+ * @property-read \Illuminate\Database\Eloquent\Collection|\InetStudio\SimpleCounters\Models\SimpleCounterModel[] $counters
+ * @property-read \Cog\Likeable\Models\LikeCounter $dislikesCounter
+ * @property-read bool $disliked
+ * @property-read int $dislikes_count
  * @property-read \Illuminate\Contracts\Routing\UrlGenerator|string $href
+ * @property-read bool $liked
+ * @property-read int $likes_count
+ * @property-read int $likes_diff_dislikes_count
+ * @property-read bool $rated
+ * @property-read float $rating
+ * @property-read string $type
+ * @property-read float $user_rate
+ * @property-read \Illuminate\Database\Eloquent\Collection|\Cog\Likeable\Models\Like[] $likesAndDislikes
+ * @property-read \Cog\Likeable\Models\LikeCounter $likesCounter
  * @property-read \Illuminate\Database\Eloquent\Collection|\Spatie\MediaLibrary\Media[] $media
- * @property-read \Illuminate\Database\Eloquent\Collection|\Phoenix\EloquentMeta\Meta[] $meta
+ * @property-read \Illuminate\Database\Eloquent\Collection|\InetStudio\Meta\Models\MetaModel[] $meta
  * @property \Illuminate\Database\Eloquent\Collection|\InetStudio\Products\Models\ProductModel[] $products
+ * @property-read \InetStudio\Rating\Models\RatingTotalModel $ratingTotal
+ * @property-read \Illuminate\Database\Eloquent\Collection|\InetStudio\Rating\Models\RatingModel[] $ratings
  * @property-read \Illuminate\Database\Eloquent\Collection|\Venturecraft\Revisionable\Revision[] $revisionHistory
  * @property \Illuminate\Database\Eloquent\Collection|\InetStudio\Tags\Models\TagModel[] $tags
  * @property-read \InetStudio\Statuses\Models\StatusModel $status
- * @method static \Illuminate\Database\Eloquent\Builder|\InetStudio\Ingredients\Models\IngredientModel findSimilarSlugs(\Illuminate\Database\Eloquent\Model $model, $attribute, $config, $slug)
+ * @method static \Illuminate\Database\Eloquent\Builder|\InetStudio\Ingredients\Models\IngredientModel findSimilarSlugs($attribute, $config, $slug)
  * @method static bool|null forceDelete()
  * @method static \Illuminate\Database\Query\Builder|\InetStudio\Ingredients\Models\IngredientModel onlyTrashed()
+ * @method static \Illuminate\Database\Eloquent\Builder|\InetStudio\Ingredients\Models\IngredientModel orderByDislikesCount($direction = 'desc')
+ * @method static \Illuminate\Database\Eloquent\Builder|\InetStudio\Ingredients\Models\IngredientModel orderByLikesCount($direction = 'desc')
+ * @method static \Illuminate\Database\Eloquent\Builder|\InetStudio\Ingredients\Models\IngredientModel orderByRating($direction = 'desc')
  * @method static bool|null restore()
  * @method static \Illuminate\Database\Eloquent\Builder|\InetStudio\Ingredients\Models\IngredientModel whereContent($value)
  * @method static \Illuminate\Database\Eloquent\Builder|\InetStudio\Ingredients\Models\IngredientModel whereCreatedAt($value)
  * @method static \Illuminate\Database\Eloquent\Builder|\InetStudio\Ingredients\Models\IngredientModel whereDeletedAt($value)
  * @method static \Illuminate\Database\Eloquent\Builder|\InetStudio\Ingredients\Models\IngredientModel whereDescription($value)
+ * @method static \Illuminate\Database\Eloquent\Builder|\InetStudio\Ingredients\Models\IngredientModel whereDislikedBy($userId = null)
  * @method static \Illuminate\Database\Eloquent\Builder|\InetStudio\Ingredients\Models\IngredientModel whereId($value)
+ * @method static \Illuminate\Database\Eloquent\Builder|\InetStudio\Ingredients\Models\IngredientModel whereLikedBy($userId = null)
+ * @method static \Illuminate\Database\Eloquent\Builder|\InetStudio\Ingredients\Models\IngredientModel whereRatedBy($userId = null)
  * @method static \Illuminate\Database\Eloquent\Builder|\InetStudio\Ingredients\Models\IngredientModel whereSlug($value)
  * @method static \Illuminate\Database\Eloquent\Builder|\InetStudio\Ingredients\Models\IngredientModel whereStatusId($value)
  * @method static \Illuminate\Database\Eloquent\Builder|\InetStudio\Ingredients\Models\IngredientModel whereTitle($value)
  * @method static \Illuminate\Database\Eloquent\Builder|\InetStudio\Ingredients\Models\IngredientModel whereUpdatedAt($value)
+ * @method static \Illuminate\Database\Eloquent\Builder|\InetStudio\Ingredients\Models\IngredientModel withAllClassifiers($classifiers, $column = 'id')
  * @method static \Illuminate\Database\Eloquent\Builder|\InetStudio\Ingredients\Models\IngredientModel withAllProducts($products, $column = 'id')
  * @method static \Illuminate\Database\Eloquent\Builder|\InetStudio\Ingredients\Models\IngredientModel withAllTags($tags, $type = null)
+ * @method static \Illuminate\Database\Eloquent\Builder|\InetStudio\Ingredients\Models\IngredientModel withAnyClassifiers($classifiers, $column = 'id')
  * @method static \Illuminate\Database\Eloquent\Builder|\InetStudio\Ingredients\Models\IngredientModel withAnyProducts($products, $column = 'id')
  * @method static \Illuminate\Database\Eloquent\Builder|\InetStudio\Ingredients\Models\IngredientModel withAnyTags($tags, $type = null)
+ * @method static \Illuminate\Database\Eloquent\Builder|\InetStudio\Ingredients\Models\IngredientModel withClassifiers($classifiers, $column = 'id')
  * @method static \Illuminate\Database\Eloquent\Builder|\InetStudio\Ingredients\Models\IngredientModel withProducts($products, $column = 'id')
  * @method static \Illuminate\Database\Query\Builder|\InetStudio\Ingredients\Models\IngredientModel withTrashed()
+ * @method static \Illuminate\Database\Eloquent\Builder|\InetStudio\Ingredients\Models\IngredientModel withoutAnyClassifiers()
  * @method static \Illuminate\Database\Eloquent\Builder|\InetStudio\Ingredients\Models\IngredientModel withoutAnyProducts()
+ * @method static \Illuminate\Database\Eloquent\Builder|\InetStudio\Ingredients\Models\IngredientModel withoutClassifiers($classifiers, $column = 'slug')
  * @method static \Illuminate\Database\Eloquent\Builder|\InetStudio\Ingredients\Models\IngredientModel withoutProducts($products, $column = 'id')
  * @method static \Illuminate\Database\Query\Builder|\InetStudio\Ingredients\Models\IngredientModel withoutTrashed()
  * @mixin \Eloquent

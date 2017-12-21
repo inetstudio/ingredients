@@ -10,11 +10,11 @@
       }
     ],
     "require": {
-      "cybercog/laravel-likeable": "^3.0",
       "inetstudio/admin-panel": "1.5.*",
       "inetstudio/classifiers": "1.5.*",
       "inetstudio/comments": "1.5.*",
       "inetstudio/experts": "1.5.*",
+      "inetstudio/favorites": "1.5.*",
       "inetstudio/polls": "1.5.*",
       "inetstudio/products": "1.5.*",
       "inetstudio/rating": "1.5.*"

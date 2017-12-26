@@ -227,6 +227,15 @@
                                         'options' => (old('classifiers')) ? \InetStudio\Classifiers\Models\ClassifierModel::whereIn('id', old('classifiers'))->where('type', 'Тип кожи')->pluck('classifiers.value', 'classifiers.id')->toArray() : $item->classifiers()->where('type', 'Тип кожи')->pluck('classifiers.value', 'classifiers.id')->toArray(),
                                     ]) !!}
 
+                                    {!! Form::datepicker('publish_date', ($item->publish_date) ? date('d.m.Y H:i', strtotime($item->publish_date)) : '', [
+                                        'label' => [
+                                            'title' => 'Дата публикации',
+                                        ],
+                                        'field' => [
+                                            'class' => 'datetimepicker form-control',
+                                        ],
+                                    ]) !!}
+
                                     {!! Form::dropdown('status_id', $item->status_id, [
                                         'label' => [
                                             'title' => 'Статус материала',

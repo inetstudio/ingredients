@@ -148,6 +148,7 @@ class IngredientsController extends Controller
         $item->description = strip_tags($request->input('description.text'));
         $item->content = $request->input('content.text');
         $item->status_id = ($request->filled('status_id')) ? $request->get('status_id') : 1;
+        $item->publish_date = ($request->filled('publish_date')) ? date('Y-m-d H:i', \DateTime::createFromFormat('!d.m.Y H:i', $request->get('publish_date'))->getTimestamp()) : null;
         $item->save();
 
         $this->saveMeta($item, $request);

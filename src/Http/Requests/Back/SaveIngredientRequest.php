@@ -51,6 +51,10 @@ class SaveIngredientRequest extends FormRequest
             'preview.copyright.max' => 'Поле «Copyright» не должно превышать 255 символов',
             'preview.alt.required' => 'Поле «Alt» обязательно для заполнения',
             'preview.alt.max' => 'Поле «Alt» не должно превышать 255 символов',
+
+            'tags.array' => 'Поле «Теги» должно содержать значение в виде массива',
+
+            'publish_date.date_format' => 'Поле «Время публикации» должно быть в формате дд.мм.гггг чч:мм',
         ];
     }
 
@@ -78,6 +82,10 @@ class SaveIngredientRequest extends FormRequest
             'preview.description' => 'max:255',
             'preview.copyright' => 'max:255',
             'preview.alt' => 'required|max:255',
+
+            'tags' => 'array',
+
+            'publish_date' => 'nullable|date_format:d.m.Y H:i',
         ];
     }
 }

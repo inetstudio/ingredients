@@ -13,6 +13,8 @@ class CreateIngredientsTables extends Migration
             $table->string('slug');
             $table->text('description')->nullable();
             $table->text('content')->nullable();
+            $table->datetime('publish_date')->nullable();
+            $table->string('webmaster_id')->default('');
             $table->unsignedInteger('status_id')->default(1);
             $table->timestamps();
             $table->softDeletes();

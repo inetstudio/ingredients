@@ -27,7 +27,6 @@ use Spatie\MediaLibrary\HasMedia\Interfaces\HasMediaConversions;
 use InetStudio\SimpleCounters\Models\Traits\HasSimpleCountersTrait;
 use InetStudio\Favorites\Contracts\Models\Traits\FavoritableContract;
 
-
 /**
  * InetStudio\Ingredients\Models\IngredientModel
  *
@@ -36,6 +35,8 @@ use InetStudio\Favorites\Contracts\Models\Traits\FavoritableContract;
  * @property string $slug
  * @property string|null $description
  * @property string|null $content
+ * @property string|null $publish_date
+ * @property string $webmaster_id
  * @property int $status_id
  * @property \Carbon\Carbon|null $created_at
  * @property \Carbon\Carbon|null $updated_at
@@ -71,11 +72,13 @@ use InetStudio\Favorites\Contracts\Models\Traits\FavoritableContract;
  * @method static \Illuminate\Database\Eloquent\Builder|\InetStudio\Ingredients\Models\IngredientModel whereDescription($value)
  * @method static \Illuminate\Database\Eloquent\Builder|\InetStudio\Ingredients\Models\IngredientModel whereFavoritedBy($collection = 'default', $userId = null)
  * @method static \Illuminate\Database\Eloquent\Builder|\InetStudio\Ingredients\Models\IngredientModel whereId($value)
+ * @method static \Illuminate\Database\Eloquent\Builder|\InetStudio\Ingredients\Models\IngredientModel wherePublishDate($value)
  * @method static \Illuminate\Database\Eloquent\Builder|\InetStudio\Ingredients\Models\IngredientModel whereRatedBy($userId = null)
  * @method static \Illuminate\Database\Eloquent\Builder|\InetStudio\Ingredients\Models\IngredientModel whereSlug($value)
  * @method static \Illuminate\Database\Eloquent\Builder|\InetStudio\Ingredients\Models\IngredientModel whereStatusId($value)
  * @method static \Illuminate\Database\Eloquent\Builder|\InetStudio\Ingredients\Models\IngredientModel whereTitle($value)
  * @method static \Illuminate\Database\Eloquent\Builder|\InetStudio\Ingredients\Models\IngredientModel whereUpdatedAt($value)
+ * @method static \Illuminate\Database\Eloquent\Builder|\InetStudio\Ingredients\Models\IngredientModel whereWebmasterId($value)
  * @method static \Illuminate\Database\Eloquent\Builder|\InetStudio\Ingredients\Models\IngredientModel withAllClassifiers($classifiers, $column = 'id')
  * @method static \Illuminate\Database\Eloquent\Builder|\InetStudio\Ingredients\Models\IngredientModel withAllProducts($products, $column = 'id')
  * @method static \Illuminate\Database\Eloquent\Builder|\InetStudio\Ingredients\Models\IngredientModel withAllTags($tags, $type = null)
@@ -126,7 +129,7 @@ class IngredientModel extends Model implements MetableContract, HasMediaConversi
      */
     protected $fillable = [
         'title', 'slug', 'description', 'content',
-        'status_id',
+        'publish_date', 'webmaster_id', 'status_id',
     ];
 
     /**

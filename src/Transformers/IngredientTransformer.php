@@ -5,13 +5,20 @@ namespace Inetstudio\Ingredients\Transformers;
 use League\Fractal\TransformerAbstract;
 use InetStudio\Ingredients\Models\IngredientModel;
 
+/**
+ * Class IngredientTransformer
+ * @package Inetstudio\Ingredients\Transformers
+ */
 class IngredientTransformer extends TransformerAbstract
 {
     /**
      * Подготовка данных для отображения в таблице.
      *
      * @param IngredientModel $ingredient
+     *
      * @return array
+     *
+     * @throws \Throwable
      */
     public function transform(IngredientModel $ingredient)
     {
@@ -23,6 +30,7 @@ class IngredientTransformer extends TransformerAbstract
             ])->render(),
             'created_at' => (string) $ingredient->created_at,
             'updated_at' => (string) $ingredient->updated_at,
+            'publish_date' => (string) $ingredient->publish_date,
             'actions' => view('admin.module.ingredients::back.partials.datatables.actions', [
                 'id' => $ingredient->id,
                 'href' => $ingredient->href,

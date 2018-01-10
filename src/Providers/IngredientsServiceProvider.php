@@ -6,8 +6,10 @@ use Illuminate\Support\Facades\Event;
 use Illuminate\Support\ServiceProvider;
 use InetStudio\Ingredients\Events\ModifyIngredientEvent;
 use InetStudio\Ingredients\Console\Commands\SetupCommand;
+use InetStudio\Ingredients\Services\Front\IngredientsService;
 use InetStudio\Ingredients\Console\Commands\CreateFoldersCommand;
 use InetStudio\Ingredients\Listeners\ClearIngredientsCacheListener;
+use InetStudio\Ingredients\Contracts\Services\IngredientsServiceContract;
 
 class IngredientsServiceProvider extends ServiceProvider
 {
@@ -32,6 +34,7 @@ class IngredientsServiceProvider extends ServiceProvider
      */
     public function register(): void
     {
+        $this->registerBindings();
     }
 
     /**
@@ -102,5 +105,15 @@ class IngredientsServiceProvider extends ServiceProvider
     protected function registerEvents(): void
     {
         Event::listen(ModifyIngredientEvent::class, ClearIngredientsCacheListener::class);
+    }
+
+    /**
+     * Регистрация привязок, алиасов и сторонних провайдеров сервисов.
+     *
+     * @return void
+     */
+    protected function registerBindings(): void
+    {
+        $this->app->singleton(IngredientsServiceContract::class, IngredientsService::class);
     }
 }

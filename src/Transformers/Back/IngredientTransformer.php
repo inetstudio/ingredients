@@ -1,13 +1,13 @@
 <?php
 
-namespace Inetstudio\Ingredients\Transformers;
+namespace Inetstudio\Ingredients\Transformers\Back;
 
 use League\Fractal\TransformerAbstract;
 use InetStudio\Ingredients\Models\IngredientModel;
 
 /**
  * Class IngredientTransformer
- * @package Inetstudio\Ingredients\Transformers
+ * @package Inetstudio\Ingredients\Transformers\Back
  */
 class IngredientTransformer extends TransformerAbstract
 {

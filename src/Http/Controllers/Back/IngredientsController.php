@@ -12,7 +12,7 @@ use Illuminate\Support\Facades\Session;
 use InetStudio\Ingredients\Models\IngredientModel;
 use Cviebrock\EloquentSluggable\Services\SlugService;
 use InetStudio\Ingredients\Events\ModifyIngredientEvent;
-use InetStudio\Ingredients\Transformers\IngredientTransformer;
+use InetStudio\Ingredients\Transformers\Back\IngredientTransformer;
 use InetStudio\Ingredients\Http\Requests\Back\SaveIngredientRequest;
 use InetStudio\AdminPanel\Http\Controllers\Back\Traits\DatatablesTrait;
 use InetStudio\Meta\Http\Controllers\Back\Traits\MetaManipulationsTrait;

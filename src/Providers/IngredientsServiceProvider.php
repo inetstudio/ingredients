@@ -11,6 +11,10 @@ use InetStudio\Ingredients\Console\Commands\CreateFoldersCommand;
 use InetStudio\Ingredients\Listeners\ClearIngredientsCacheListener;
 use InetStudio\Ingredients\Contracts\Services\IngredientsServiceContract;
 
+/**
+ * Class IngredientsServiceProvider
+ * @package InetStudio\Ingredients\Providers
+ */
 class IngredientsServiceProvider extends ServiceProvider
 {
     /**

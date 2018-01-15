@@ -27,7 +27,8 @@
     "extra": {
       "laravel": {
         "providers": [
-          "InetStudio\\Ingredients\\Providers\\IngredientsServiceProvider"
+          "InetStudio\\Ingredients\\Providers\\IngredientsServiceProvider",
+          "InetStudio\\Ingredients\\Providers\\FormBuilderServiceProvider"
         ]
       }
     }

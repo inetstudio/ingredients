@@ -1,6 +1,6 @@
 <li>
     <small class="label label-default">{{ $ingredients->sum('total') }}</small>
-    <span class="m-l-xs">Статьи</span>
+    <span class="m-l-xs">Ингредиенты</span>
     <ul class="todo-list m-t">
         @foreach ($ingredients as $ingredient)
             <li>

@@ -2,8 +2,10 @@
 
 namespace InetStudio\Ingredients\Providers;
 
+use Illuminate\Support\Facades\DB;
 use Illuminate\Support\Facades\Event;
 use Illuminate\Support\ServiceProvider;
+use InetStudio\Ingredients\Models\IngredientModel;
 use InetStudio\Ingredients\Events\ModifyIngredientEvent;
 use InetStudio\Ingredients\Console\Commands\SetupCommand;
 use InetStudio\Ingredients\Services\Front\IngredientsService;
@@ -29,6 +31,7 @@ class IngredientsServiceProvider extends ServiceProvider
         $this->registerRoutes();
         $this->registerViews();
         $this->registerEvents();
+        $this->registerViewComposers();
     }
 
     /**
@@ -109,6 +112,20 @@ class IngredientsServiceProvider extends ServiceProvider
     protected function registerEvents(): void
     {
         Event::listen(ModifyIngredientEvent::class, ClearIngredientsCacheListener::class);
+    }
+
+    /**
+     * Register Ingredient's view composers.
+     *
+     * @return void
+     */
+    public function registerViewComposers(): void
+    {
+        view()->composer('admin.module.ingredients::back.partials.analytics.materials.statistic', function ($view) {
+            $articles = IngredientModel::with('status')->select(['status_id', DB::raw('count(*) as total')])->groupBy('status_id')->get();
+
+            $view->with('ingredients', $articles);
+        });
     }
 
     /**

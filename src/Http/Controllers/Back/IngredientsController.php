@@ -38,13 +38,12 @@ class IngredientsController extends Controller
     /**
      * Список ингредиентов.
      *
-     * @param DataTables $dataTable
      * @return \Illuminate\Contracts\View\Factory|\Illuminate\View\View
      * @throws \Exception
      */
-    public function index(DataTables $dataTable): View
+    public function index(): View
     {
-        $table = $this->generateTable($dataTable, 'ingredients', 'index');
+        $table = $this->generateTable('ingredients', 'index');
 
         return view('admin.module.ingredients::back.pages.index', compact('table'));
     }
@@ -68,13 +67,12 @@ class IngredientsController extends Controller
     /**
      * Добавление ингредиента.
      *
-     * @param DataTables $dataTable
      * @return \Illuminate\Contracts\View\Factory|\Illuminate\View\View
      * @throws \Exception
      */
-    public function create(DataTables $dataTable): View
+    public function create(): View
     {
-        $table = $this->generateTable($dataTable, 'products', 'embedded');
+        $table = $this->generateTable('products', 'embedded');
 
         return view('admin.module.ingredients::back.pages.form', [
             'item' => new IngredientModel(),
@@ -96,15 +94,14 @@ class IngredientsController extends Controller
     /**
      * Редактирование ингредиента.
      *
-     * @param DataTables $dataTable
      * @param null $id
      * @return \Illuminate\Contracts\View\Factory|\Illuminate\View\View
      * @throws \Exception
      */
-    public function edit(DataTables $dataTable, $id = null): View
+    public function edit($id = null): View
     {
         if (! is_null($id) && $id > 0 && $item = IngredientModel::find($id)) {
-            $table = $this->generateTable($dataTable, 'products', 'embedded');
+            $table = $this->generateTable('products', 'embedded');
 
             return view('admin.module.ingredients::back.pages.form', [
                 'item' => $item,

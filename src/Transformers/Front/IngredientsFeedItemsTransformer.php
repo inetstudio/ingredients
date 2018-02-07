@@ -1,6 +1,6 @@
 <?php
 
-namespace Inetstudio\Ingredients\Transformers\Front;
+namespace InetStudio\Ingredients\Transformers\Front;
 
 use League\Fractal\TransformerAbstract;
 use InetStudio\Ingredients\Models\IngredientModel;
@@ -8,7 +8,7 @@ use League\Fractal\Resource\Collection as FractalCollection;
 
 /**
  * Class IngredientsFeedItemsTransformer
- * @package Inetstudio\Ingredients\Transformers\Front
+ * @package InetStudio\Ingredients\Transformers\Front
  */
 class IngredientsFeedItemsTransformer extends TransformerAbstract
 {

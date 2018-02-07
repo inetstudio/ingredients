@@ -11,13 +11,23 @@
                 <div class="modal-body">
                     <div class="ibox-content form-horizontal">
                         <div class="row">
-                            <div class="form-group">
-                                <label class="col-sm-2 control-label">Ингредиент</label>
-                                <div class="col-sm-10">
-                                    <input type="hidden" name="ingredient_data" class="choose-data">
-                                    <input type="text" name="ingredient" data-search="{{ route('back.ingredients.getSuggestions') }}" class="form-control autocomplete">
-                                </div>
-                            </div>
+
+                            {!! Form::hidden('ingredient_data', '', [
+                                'class' => 'choose-data',
+                                'id' => 'ingredient_data',
+                            ]) !!}
+
+                            {!! Form::string('ingredient', '', [
+                                'label' => [
+                                    'title' => 'Ингредиент',
+                                ],
+                                'field' => [
+                                    'class' => 'form-control autocomplete',
+                                    'data-search' => route('back.ingredients.getSuggestions'),
+                                    'data-target' => '#ingredient_data'
+                                ],
+                            ]) !!}
+
                         </div>
                     </div>
                 </div>

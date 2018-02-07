@@ -211,29 +211,37 @@ class IngredientsController extends Controller
      */
     public function getSuggestions(Request $request): JsonResponse
     {
-        $data = [];
+        $search = $request->get('q');
+
+        $items = IngredientModel::select(['id', 'title', 'slug'])->where('title', 'LIKE', '%'.$search.'%')->get();
 
         if ($request->filled('type') && $request->get('type') == 'autocomplete') {
-            $search = $request->get('query');
-            $data['suggestions'] = [];
+            $type = get_class(new IngredientModel());
 
-            $ingredients = IngredientModel::where('title', 'LIKE', '%'.$search.'%')->get();
-
-            foreach ($ingredients as $ingredient) {
-                $data['suggestions'][] = [
-                    'value' => $ingredient->title,
-                    'data' => [
-                        'id' => $ingredient->id,
-                        'title' => $ingredient->title,
-                        'href' => url($ingredient->href),
-                        'preview' => ($ingredient->getFirstMedia('preview')) ? url($ingredient->getFirstMedia('preview')->getUrl('preview_default')) : '',
+            $data = $items->mapToGroups(function ($item) use ($type) {
+                return [
+                    'suggestions' => [
+                        'value' => $item->title,
+                        'data' => [
+                            'id' => $item->id,
+                            'type' => $type,
+                            'title' => $item->title,
+                            'path' => parse_url($item->href, PHP_URL_PATH),
+                            'href' => $item->href,
+                            'preview' => ($item->getFirstMedia('preview')) ? url($item->getFirstMedia('preview')->getUrl('preview_default')) : '',
+                        ],
                     ],
                 ];
-            }
+            });
         } else {
-            $search = $request->get('q');
-
-            $data['items'] = IngredientModel::select(['id', 'title as name'])->where('title', 'LIKE', '%'.$search.'%')->get()->toArray();
+            $data = $items->mapToGroups(function ($item) {
+                return [
+                    'items' => [
+                        'id' => $item->id,
+                        'name' => $item->title,
+                    ],
+                ];
+            });
         }
 
         return response()->json($data);

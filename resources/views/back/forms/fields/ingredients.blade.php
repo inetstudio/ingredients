@@ -13,5 +13,7 @@
         'multiple' => 'multiple',
         'data-source' => route('back.ingredients.getSuggestions'),
     ],
-    'options' => (old('ingredients')) ? \InetStudio\Ingredients\Models\IngredientModel::whereIn('id', old('ingredients'))->pluck('title', 'id')->toArray() : $item->ingredients()->pluck('title', 'id')->toArray(),
+    'options' => [
+        'values' => (old('ingredients')) ? \InetStudio\Ingredients\Models\IngredientModel::whereIn('id', old('ingredients'))->pluck('title', 'id')->toArray() : $item->ingredients()->pluck('title', 'id')->toArray(),
+    ],
 ]) !!}

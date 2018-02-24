@@ -2,14 +2,13 @@
 
 namespace InetStudio\Ingredients\Models;
 
-use Spatie\Tags\HasTags;
 use Cocur\Slugify\Slugify;
 use Laravel\Scout\Searchable;
 use Spatie\MediaLibrary\Media;
-use InetStudio\Tags\Models\TagModel;
 use Illuminate\Database\Eloquent\Model;
 use Cviebrock\EloquentSluggable\Sluggable;
 use InetStudio\Meta\Models\Traits\Metable;
+use InetStudio\Tags\Models\Traits\HasTags;
 use InetStudio\Statuses\Models\StatusModel;
 use Illuminate\Database\Eloquent\SoftDeletes;
 use InetStudio\Rating\Models\Traits\Rateable;
@@ -228,16 +227,6 @@ class IngredientModel extends Model implements MetableContract, HasMediaConversi
     public function getTypeAttribute()
     {
         return self::MATERIAL_TYPE;
-    }
-
-    /**
-     * Возвращаем класс модели тега.
-     *
-     * @return string
-     */
-    public static function getTagClassName()
-    {
-        return TagModel::class;
     }
 
     /**

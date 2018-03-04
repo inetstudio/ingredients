@@ -25,6 +25,7 @@ trait HasIngredients
     public static function getIngredientClassName(): string
     {
         $model = app()->make('InetStudio\Ingredients\Contracts\Models\IngredientModelContract');
+
         return get_class($model);
     }
 

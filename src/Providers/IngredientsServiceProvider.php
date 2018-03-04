@@ -4,7 +4,6 @@ namespace InetStudio\Ingredients\Providers;
 
 use Illuminate\Support\Facades\DB;
 use Illuminate\Support\ServiceProvider;
-use InetStudio\Ingredients\Models\IngredientModel;
 
 /**
  * Class IngredientsServiceProvider.

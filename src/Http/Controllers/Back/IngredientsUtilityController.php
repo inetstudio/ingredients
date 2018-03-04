@@ -6,8 +6,8 @@ use Illuminate\Http\Request;
 use App\Http\Controllers\Controller;
 use Cviebrock\EloquentSluggable\Services\SlugService;
 use InetStudio\Ingredients\Contracts\Http\Responses\Back\Utility\SlugResponseContract;
-use InetStudio\Ingredients\Contracts\Http\Controllers\Back\IngredientsUtilityControllerContract;
 use InetStudio\Ingredients\Contracts\Http\Responses\Back\Utility\SuggestionsResponseContract;
+use InetStudio\Ingredients\Contracts\Http\Controllers\Back\IngredientsUtilityControllerContract;
 
 /**
  * Class IngredientsUtilityController.

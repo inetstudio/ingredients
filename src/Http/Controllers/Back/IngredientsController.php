@@ -2,248 +2,134 @@
 
 namespace InetStudio\Ingredients\Http\Controllers\Back;
 
-use Illuminate\View\View;
-use Illuminate\Http\Request;
-use Yajra\DataTables\DataTables;
-use Illuminate\Http\JsonResponse;
 use App\Http\Controllers\Controller;
-use Illuminate\Http\RedirectResponse;
-use Illuminate\Support\Facades\Session;
-use InetStudio\Ingredients\Models\IngredientModel;
-use Cviebrock\EloquentSluggable\Services\SlugService;
-use InetStudio\Ingredients\Events\ModifyIngredientEvent;
-use InetStudio\Ingredients\Transformers\Back\IngredientTransformer;
-use InetStudio\Ingredients\Http\Requests\Back\SaveIngredientRequest;
-use InetStudio\AdminPanel\Http\Controllers\Back\Traits\DatatablesTrait;
-use InetStudio\Meta\Http\Controllers\Back\Traits\MetaManipulationsTrait;
-use InetStudio\Tags\Http\Controllers\Back\Traits\TagsManipulationsTrait;
-use InetStudio\AdminPanel\Http\Controllers\Back\Traits\ImagesManipulationsTrait;
-use InetStudio\Products\Http\Controllers\Back\Traits\ProductsManipulationsTrait;
-use InetStudio\Classifiers\Http\Controllers\Back\Traits\ClassifiersManipulationsTrait;
+use InetStudio\Ingredients\Contracts\Http\Requests\Back\SaveIngredientRequestContract;
+use InetStudio\Ingredients\Contracts\Http\Controllers\Back\IngredientsControllerContract;
+use InetStudio\Ingredients\Contracts\Http\Responses\Back\Ingredients\FormResponseContract;
+use InetStudio\Ingredients\Contracts\Http\Responses\Back\Ingredients\SaveResponseContract;
+use InetStudio\Ingredients\Contracts\Http\Responses\Back\Ingredients\IndexResponseContract;
+use InetStudio\Ingredients\Contracts\Http\Responses\Back\Ingredients\DestroyResponseContract;
 
 /**
- * Контроллер для управления ингредиентами.
- *
- * Class ContestByTagStatusesController
+ * Class IngredientsController.
  */
-class IngredientsController extends Controller
+class IngredientsController extends Controller implements IngredientsControllerContract
 {
-    use DatatablesTrait;
-    use MetaManipulationsTrait;
-    use TagsManipulationsTrait;
-    use ImagesManipulationsTrait;
-    use ProductsManipulationsTrait;
-    use ClassifiersManipulationsTrait;
+    /**
+     * Используемые сервисы.
+     *
+     * @var array
+     */
+    protected $services;
 
     /**
-     * Список ингредиентов.
-     *
-     * @return \Illuminate\Contracts\View\Factory|\Illuminate\View\View
-     * @throws \Exception
+     * IngredientsController constructor.
      */
-    public function index(): View
+    public function __construct()
     {
-        $table = $this->generateTable('ingredients', 'index');
-
-        return view('admin.module.ingredients::back.pages.index', compact('table'));
+        $this->services['ingredients'] = app()->make('InetStudio\Ingredients\Contracts\Services\Back\IngredientsServiceContract');
+        $this->services['dataTables'] = app()->make('InetStudio\Ingredients\Contracts\Services\Back\IngredientsDataTableServiceContract');
     }
 
     /**
-     * DataTables ServerSide.
+     * Список объектов.
      *
-     * @return mixed
-     * @throws \Exception
+     * @return IndexResponseContract
      */
-    public function data()
+    public function index(): IndexResponseContract
     {
-        $items = IngredientModel::with('status');
+        $table = $this->services['dataTables']->html();
 
-        return DataTables::of($items)
-            ->setTransformer(new IngredientTransformer)
-            ->rawColumns(['status', 'actions'])
-            ->make();
-    }
-
-    /**
-     * Добавление ингредиента.
-     *
-     * @return \Illuminate\Contracts\View\Factory|\Illuminate\View\View
-     * @throws \Exception
-     */
-    public function create(): View
-    {
-        $table = $this->generateTable('products', 'embedded');
-
-        return view('admin.module.ingredients::back.pages.form', [
-            'item' => new IngredientModel(),
-            'productsTable' => $table,
+        return app()->makeWith('InetStudio\Ingredients\Contracts\Http\Responses\Back\Ingredients\IndexResponseContract', [
+            'data' => compact('table'),
         ]);
     }
 
     /**
-     * Создание ингредиента.
+     * Добавление объекта.
      *
-     * @param SaveIngredientRequest $request
-     * @return \Illuminate\Http\RedirectResponse
+     * @return FormResponseContract
      */
-    public function store(SaveIngredientRequest $request): RedirectResponse
+    public function create(): FormResponseContract
+    {
+        $item = $this->services['ingredients']->getIngredientObject();
+
+        return app()->makeWith('InetStudio\Ingredients\Contracts\Http\Responses\Back\Ingredients\FormResponseContract', [
+            'data' => compact('item'),
+        ]);
+    }
+
+    /**
+     * Создание объекта.
+     *
+     * @param SaveIngredientRequestContract $request
+     *
+     * @return SaveResponseContract
+     */
+    public function store(SaveIngredientRequestContract $request): SaveResponseContract
     {
         return $this->save($request);
     }
 
     /**
-     * Редактирование ингредиента.
+     * Редактирование объекта.
      *
-     * @param null $id
-     * @return \Illuminate\Contracts\View\Factory|\Illuminate\View\View
-     * @throws \Exception
+     * @param int $id
+     *
+     * @return FormResponseContract
      */
-    public function edit($id = null): View
+    public function edit($id = 0): FormResponseContract
     {
-        if (! is_null($id) && $id > 0 && $item = IngredientModel::find($id)) {
-            $table = $this->generateTable('products', 'embedded');
+        $item = $this->services['ingredients']->getIngredientObject($id);
 
-            return view('admin.module.ingredients::back.pages.form', [
-                'item' => $item,
-                'productsTable' => $table,
-            ]);
-        } else {
-            abort(404);
-        }
+        return app()->makeWith('InetStudio\Ingredients\Contracts\Http\Responses\Back\Ingredients\FormResponseContract', [
+            'data' => compact('item'),
+        ]);
     }
 
     /**
-     * Обновление ингредиента.
+     * Обновление объекта.
      *
-     * @param SaveIngredientRequest $request
-     * @param null $id
-     * @return \Illuminate\Http\RedirectResponse
+     * @param SaveIngredientRequestContract $request
+     * @param int $id
+     *
+     * @return SaveResponseContract
      */
-    public function update(SaveIngredientRequest $request, $id = null): RedirectResponse
+    public function update(SaveIngredientRequestContract $request, int $id = 0): SaveResponseContract
     {
         return $this->save($request, $id);
     }
 
     /**
-     * Сохранение ингредиента.
+     * Сохранение объекта.
      *
-     * @param SaveIngredientRequest $request
-     * @param null $id
-     * @return \Illuminate\Http\RedirectResponse
+     * @param SaveIngredientRequestContract $request
+     * @param int $id
+     *
+     * @return SaveResponseContract
      */
-    private function save($request, $id = null): RedirectResponse
+    private function save(SaveIngredientRequestContract $request, int $id = 0): SaveResponseContract
     {
-        if (! is_null($id) && $id > 0 && $item = IngredientModel::find($id)) {
-            $action = 'отредактирован';
-        } else {
-            $action = 'создан';
-            $item = new IngredientModel();
-        }
+        $item = $this->services['ingredients']->save($request, $id);
 
-        $item->title = strip_tags($request->get('title'));
-        $item->slug = strip_tags($request->get('slug'));
-        $item->description = strip_tags($request->input('description.text'));
-        $item->content = $request->input('content.text');
-        $item->status_id = ($request->filled('status_id')) ? $request->get('status_id') : 1;
-        $item->publish_date = ($request->filled('publish_date')) ? date('Y-m-d H:i', \DateTime::createFromFormat('!d.m.Y H:i', $request->get('publish_date'))->getTimestamp()) : null;
-        $item->save();
-
-        $this->saveMeta($item, $request);
-        $this->saveTags($item, $request);
-        $this->saveClassifiers($item, $request);
-        $this->saveProducts($item, $request);
-        $this->saveImages($item, $request, ['og_image', 'preview', 'content'], 'ingredients');
-
-        // Обновление поискового индекса.
-        $item->searchable();
-
-        event(new ModifyIngredientEvent($item));
-
-        Session::flash('success', 'Ингредиент «'.$item->title.'» успешно '.$action);
-
-        return response()->redirectToRoute('back.ingredients.edit', [
-            $item->fresh()->id,
+        return app()->makeWith('InetStudio\Ingredients\Contracts\Http\Responses\Back\Ingredients\SaveResponseContract', [
+            'item' => $item,
         ]);
     }
 
     /**
-     * Удаление ингредиента.
+     * Удаление объекта.
      *
-     * @param null $id
-     * @return \Illuminate\Http\JsonResponse
-     */
-    public function destroy($id = null): JsonResponse
-    {
-        if (! is_null($id) && $id > 0 && $item = IngredientModel::find($id)) {
-            $item->delete();
-
-            event(new ModifyIngredientEvent($item));
-
-            return response()->json([
-                'success' => true,
-            ]);
-        } else {
-            return response()->json([
-                'success' => false,
-            ]);
-        }
-    }
-
-    /**
-     * Получаем slug для модели по строке.
+     * @param int $id
      *
-     * @param Request $request
-     * @return \Illuminate\Http\JsonResponse
+     * @return DestroyResponseContract
      */
-    public function getSlug(Request $request): JsonResponse
+    public function destroy(int $id = 0): DestroyResponseContract
     {
-        $name = $request->get('name');
-        $slug = ($name) ? SlugService::createSlug(IngredientModel::class, 'slug', $name) : '';
+        $result = $this->services['ingredients']->destroy($id);
 
-        return response()->json($slug);
-    }
-
-    /**
-     * Возвращаем ингредиенты для поля.
-     *
-     * @param Request $request
-     * @return \Illuminate\Http\JsonResponse
-     */
-    public function getSuggestions(Request $request): JsonResponse
-    {
-        $search = $request->get('q');
-
-        $items = IngredientModel::select(['id', 'title', 'slug'])->where('title', 'LIKE', '%'.$search.'%')->get();
-
-        if ($request->filled('type') && $request->get('type') == 'autocomplete') {
-            $type = get_class(new IngredientModel());
-
-            $data = $items->mapToGroups(function ($item) use ($type) {
-                return [
-                    'suggestions' => [
-                        'value' => $item->title,
-                        'data' => [
-                            'id' => $item->id,
-                            'type' => $type,
-                            'title' => $item->title,
-                            'path' => parse_url($item->href, PHP_URL_PATH),
-                            'href' => $item->href,
-                            'preview' => ($item->getFirstMedia('preview')) ? url($item->getFirstMedia('preview')->getUrl('preview_default')) : '',
-                        ],
-                    ],
-                ];
-            });
-        } else {
-            $data = $items->mapToGroups(function ($item) {
-                return [
-                    'items' => [
-                        'id' => $item->id,
-                        'name' => $item->title,
-                    ],
-                ];
-            });
-        }
-
-        return response()->json($data);
+        return app()->makeWith('InetStudio\Ingredients\Contracts\Http\Responses\Back\Ingredients\DestroyResponseContract', [
+            'result' => ($result === null) ? false : $result,
+        ]);
     }
 }

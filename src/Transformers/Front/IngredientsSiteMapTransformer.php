@@ -3,43 +3,43 @@
 namespace InetStudio\Ingredients\Transformers\Front;
 
 use League\Fractal\TransformerAbstract;
-use InetStudio\Ingredients\Models\IngredientModel;
 use League\Fractal\Resource\Collection as FractalCollection;
+use InetStudio\Ingredients\Contracts\Models\IngredientModelContract;
+use InetStudio\Ingredients\Contracts\Transformers\Front\IngredientsSiteMapTransformerContract;
 
 /**
- * Class IngredientsSiteMapTransformer
- * @package InetStudio\Ingredients\Transformers\Front
+ * Class IngredientsSiteMapTransformer.
  */
-class IngredientsSiteMapTransformer extends TransformerAbstract
+class IngredientsSiteMapTransformer extends TransformerAbstract implements IngredientsSiteMapTransformerContract
 {
     /**
      * Подготовка данных для отображения в карте сайта.
      *
-     * @param IngredientModel $ingredient
+     * @param IngredientModelContract $item
      *
      * @return array
      *
      * @throws \Throwable
      */
-    public function transform(IngredientModel $ingredient): array
+    public function transform(IngredientModelContract $item): array
     {
         return [
-            'loc' => $ingredient->href,
-            'lastmod' => $ingredient->updated_at->toW3cString(),
+            'loc' => $item->href,
+            'lastmod' => $item->updated_at->toW3cString(),
             'priority' => '0.9',
             'freq' => 'weekly',
         ];
     }
 
     /**
-     * Обработка коллекции ингредиентов.
+     * Обработка коллекции объектов.
      *
-     * @param $ingredients
+     * @param $items
      *
      * @return FractalCollection
      */
-    public function transformCollection($ingredients): FractalCollection
+    public function transformCollection($items): FractalCollection
     {
-        return new FractalCollection($ingredients, $this);
+        return new FractalCollection($items, $this);
     }
 }

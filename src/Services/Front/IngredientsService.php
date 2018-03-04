@@ -3,18 +3,68 @@
 namespace InetStudio\Ingredients\Services\Front;
 
 use League\Fractal\Manager;
-use InetStudio\Ingredients\Models\IngredientModel;
+use Illuminate\Support\Collection;
 use League\Fractal\Serializer\DataArraySerializer;
-use InetStudio\Ingredients\Contracts\Services\IngredientsServiceContract;
-use InetStudio\Ingredients\Transformers\Front\IngredientsSiteMapTransformer;
-use InetStudio\Ingredients\Transformers\Front\IngredientsFeedItemsTransformer;
+use InetStudio\Ingredients\Contracts\Services\Front\IngredientsServiceContract;
+use InetStudio\Ingredients\Contracts\Repositories\IngredientsRepositoryContract;
 
 /**
- * Class IngredientsService
- * @package InetStudio\Ingredients\Services\Front
+ * Class IngredientsService.
  */
 class IngredientsService implements IngredientsServiceContract
 {
+    /**
+     * @var IngredientsRepositoryContract
+     */
+    private $repository;
+
+    /**
+     * IngredientsService constructor.
+     *
+     * @param IngredientsRepositoryContract $repository
+     */
+    public function __construct(IngredientsRepositoryContract $repository)
+    {
+        $this->repository = $repository;
+    }
+
+    /**
+     * Получаем объект по slug.
+     *
+     * @param string $slug
+     * @param bool $returnBuilder
+     *
+     * @return mixed
+     */
+    public function getIngredientBySlug(string $slug, bool $returnBuilder = false)
+    {
+        return $this->repository->getItemBySlug($slug, $returnBuilder);
+    }
+
+    /**
+     * Получаем все объекты.
+     *
+     * @param bool $returnBuilder
+     *
+     * @return mixed
+     */
+    public function getAllIngredients(bool $returnBuilder = false)
+    {
+        return $this->repository->getAllItems($returnBuilder);
+    }
+
+    /**
+     * Возвращаем объекты, привязанные к материалам.
+     *
+     * @param Collection $materials
+     *
+     * @return Collection
+     */
+    public function getIngredientsByMaterials(Collection $materials): Collection
+    {
+        return $this->repository->getItemsByMaterials($materials);
+    }
+
     /**
      * Получаем информацию по ингредиентам для фида.
      *
@@ -22,13 +72,21 @@ class IngredientsService implements IngredientsServiceContract
      */
     public function getFeedItems(): array
     {
-        $ingredients = IngredientModel::whereHas('status', function ($statusQuery) {
-            $statusQuery->whereIn('alias', ['seo_check', 'published']);
-        })->whereNotNull('publish_date')->orderBy('publish_date', 'desc')->limit(500)->get();
+        $items = $this->repository->getAllItems(true)
+            ->whereNotNull('publish_date')
+            ->orderBy('publish_date', 'desc')
+            ->limit(500)
+            ->get();
 
-        $resource = (new IngredientsFeedItemsTransformer())->transformCollection($ingredients);
+        $resource = app()->make('InetStudio\Ingredients\Contracts\Transformers\Front\IngredientsFeedItemsTransformerContract')
+            ->transformCollection($items);
 
-        return $this->serializeToArray($resource);
+        $manager = new Manager();
+        $manager->setSerializer(new DataArraySerializer());
+
+        $transformation = $manager->createData($resource)->toArray();
+
+        return $transformation['data'];
     }
 
     /**
@@ -38,27 +96,11 @@ class IngredientsService implements IngredientsServiceContract
      */
     public function getSiteMapItems(): array
     {
-        $ingredients = IngredientModel::select(['slug', 'created_at', 'status_id', 'updated_at'])
-            ->whereHas('status', function ($statusQuery) {
-                $statusQuery->whereIn('alias', ['seo_check', 'published']);
-            })
-            ->orderBy('created_at', 'desc')
-            ->get();
+        $items = $this->repository->getAllItems();
 
-        $resource = (new IngredientsSiteMapTransformer())->transformCollection($ingredients);
+        $resource = app()->make('InetStudio\Ingredients\Contracts\Transformers\Front\IngredientsSiteMapTransformerContract')
+            ->transformCollection($items);
 
-        return $this->serializeToArray($resource);
-    }
-
-    /**
-     * Преобразовываем данные в массив.
-     *
-     * @param $resource
-     *
-     * @return array
-     */
-    private function serializeToArray($resource): array
-    {
         $manager = new Manager();
         $manager->setSerializer(new DataArraySerializer());
 

@@ -3,37 +3,37 @@
 namespace InetStudio\Ingredients\Transformers\Back;
 
 use League\Fractal\TransformerAbstract;
-use InetStudio\Ingredients\Models\IngredientModel;
+use InetStudio\Ingredients\Contracts\Models\IngredientModelContract;
+use InetStudio\Ingredients\Contracts\Transformers\Back\IngredientTransformerContract;
 
 /**
- * Class IngredientTransformer
- * @package InetStudio\Ingredients\Transformers\Back
+ * Class IngredientTransformer.
  */
-class IngredientTransformer extends TransformerAbstract
+class IngredientTransformer extends TransformerAbstract implements IngredientTransformerContract
 {
     /**
      * Подготовка данных для отображения в таблице.
      *
-     * @param IngredientModel $ingredient
+     * @param IngredientModelContract $item
      *
      * @return array
      *
      * @throws \Throwable
      */
-    public function transform(IngredientModel $ingredient)
+    public function transform(IngredientModelContract $item)
     {
         return [
-            'id' => (int) $ingredient->id,
-            'title' => $ingredient->title,
+            'id' => (int) $item->id,
+            'title' => $item->title,
             'status' => view('admin.module.ingredients::back.partials.datatables.status', [
-                'status' => $ingredient->status,
+                'status' => $item->status,
             ])->render(),
-            'created_at' => (string) $ingredient->created_at,
-            'updated_at' => (string) $ingredient->updated_at,
-            'publish_date' => (string) $ingredient->publish_date,
+            'created_at' => (string) $item->created_at,
+            'updated_at' => (string) $item->updated_at,
+            'publish_date' => (string) $item->publish_date,
             'actions' => view('admin.module.ingredients::back.partials.datatables.actions', [
-                'id' => $ingredient->id,
-                'href' => $ingredient->href,
+                'id' => $item->id,
+                'href' => $item->href,
             ])->render(),
         ];
     }

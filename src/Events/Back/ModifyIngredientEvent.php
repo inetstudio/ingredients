@@ -1,19 +1,22 @@
 <?php
 
-namespace InetStudio\Ingredients\Events;
+namespace InetStudio\Ingredients\Events\Back;
 
 use Illuminate\Queue\SerializesModels;
+use InetStudio\Ingredients\Contracts\Events\Back\ModifyIngredientEventContract;
 
-class ModifyIngredientEvent
+/**
+ * Class ModifyIngredientEvent.
+ */
+class ModifyIngredientEvent implements ModifyIngredientEventContract
 {
     use SerializesModels;
 
     public $object;
 
     /**
-     * Create a new event instance.
-     *
      * ModifyIngredientEvent constructor.
+     *
      * @param $object
      */
     public function __construct($object)

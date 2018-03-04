@@ -3,60 +3,60 @@
 namespace InetStudio\Ingredients\Transformers\Front;
 
 use League\Fractal\TransformerAbstract;
-use InetStudio\Ingredients\Models\IngredientModel;
 use League\Fractal\Resource\Collection as FractalCollection;
+use InetStudio\Ingredients\Contracts\Models\IngredientModelContract;
+use InetStudio\Ingredients\Contracts\Transformers\Front\IngredientsFeedItemsTransformerContract;
 
 /**
- * Class IngredientsFeedItemsTransformer
- * @package InetStudio\Ingredients\Transformers\Front
+ * Class IngredientsFeedItemsTransformer.
  */
-class IngredientsFeedItemsTransformer extends TransformerAbstract
+class IngredientsFeedItemsTransformer extends TransformerAbstract implements IngredientsFeedItemsTransformerContract
 {
     /**
      * Подготовка данных для отображения в фиде.
      *
-     * @param IngredientModel $ingredient
+     * @param IngredientModelContract $item
      *
      * @return array
      *
      * @throws \Throwable
      */
-    public function transform(IngredientModel $ingredient): array
+    public function transform(IngredientModelContract $item): array
     {
         return [
-            'title' => $ingredient->title,
-            'author' => $this->getAuthor($ingredient),
-            'link' => $ingredient->href,
-            'pubdate' => $ingredient->publish_date,
-            'description' => $ingredient->description,
-            'content' => $ingredient->content,
+            'title' => $item->title,
+            'author' => $this->getAuthor($item),
+            'link' => $item->href,
+            'pubdate' => $item->publish_date,
+            'description' => $item->description,
+            'content' => $item->content,
             'enclosure' => [],
             'category' => 'Ингредиенты',
         ];
     }
 
     /**
-     * Обработка коллекции статей.
+     * Обработка коллекции объектов.
      *
-     * @param $ingredients
+     * @param $items
      *
      * @return FractalCollection
      */
-    public function transformCollection($ingredients): FractalCollection
+    public function transformCollection($items): FractalCollection
     {
-        return new FractalCollection($ingredients, $this);
+        return new FractalCollection($items, $this);
     }
 
     /**
-     * Получаем автора статьи.
+     * Получаем автора материала.
      *
-     * @param IngredientModel $ingredient
+     * @param IngredientModelContract $item
      *
      * @return string
      */
-    private function getAuthor(IngredientModel $ingredient): string
+    protected function getAuthor(IngredientModelContract $item): string
     {
-        foreach ($ingredient->revisionHistory as $history) {
+        foreach ($item->revisionHistory as $history) {
             if ($history->key == 'created_at' && ! $history->old_value) {
                 $user = $history->userResponsible();
 

@@ -1,14 +1,15 @@
 <?php
 
-Route::group(['namespace' => 'InetStudio\Ingredients\Http\Controllers\Back'], function () {
-    Route::group(['middleware' => 'web', 'prefix' => 'back'], function () {
-        Route::group(['middleware' => 'back.auth'], function () {
-            Route::post('ingredients/slug', 'IngredientsController@getSlug')->name('back.ingredients.getSlug');
-            Route::post('ingredients/suggestions', 'IngredientsController@getSuggestions')->name('back.ingredients.getSuggestions');
-            Route::any('ingredients/data', 'IngredientsController@data')->name('back.ingredients.data');
-            Route::resource('ingredients', 'IngredientsController', ['except' => [
-                'show',
-            ], 'as' => 'back']);
-        });
-    });
+Route::group([
+    'namespace' => 'InetStudio\Ingredients\Contracts\Http\Controllers\Back',
+    'middleware' => ['web', 'back.auth'],
+    'prefix' => 'back',
+], function () {
+    Route::any('ingredients/data', 'IngredientsDataControllerContract@data')->name('back.ingredients.data.index');
+    Route::post('ingredients/slug', 'IngredientsUtilityControllerContract@getSlug')->name('back.ingredients.getSlug');
+    Route::post('ingredients/suggestions', 'IngredientsUtilityControllerContract@getSuggestions')->name('back.ingredients.getSuggestions');
+
+    Route::resource('ingredients', 'IngredientsControllerContract', ['except' => [
+        'show',
+    ], 'as' => 'back']);
 });

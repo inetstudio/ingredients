@@ -1,3 +1,5 @@
+@inject('ingredientsService', 'InetStudio\Ingredients\Contracts\Services\Back\IngredientsServiceContract')
+
 @php
     $item = $value;
 @endphp
@@ -14,6 +16,6 @@
         'data-source' => route('back.ingredients.getSuggestions'),
     ],
     'options' => [
-        'values' => (old('ingredients')) ? \InetStudio\Ingredients\Models\IngredientModel::whereIn('id', old('ingredients'))->pluck('title', 'id')->toArray() : $item->ingredients()->pluck('title', 'id')->toArray(),
+        'values' => (old('ingredients')) ? $ingredientsService->getIngredientsByIDs(old('ingredients'), true)->pluck('title', 'id')->toArray() : $item->ingredients()->pluck('title', 'id')->toArray(),
     ],
 ]) !!}

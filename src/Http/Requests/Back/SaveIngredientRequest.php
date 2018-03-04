@@ -4,8 +4,13 @@ namespace InetStudio\Ingredients\Http\Requests\Back;
 
 use Illuminate\Http\Request;
 use Illuminate\Foundation\Http\FormRequest;
+use InetStudio\Uploads\Validation\Rules\CropSize;
+use InetStudio\Ingredients\Contracts\Http\Requests\Back\SaveIngredientRequestContract;
 
-class SaveIngredientRequest extends FormRequest
+/**
+ * Class SaveIngredientRequest.
+ */
+class SaveIngredientRequest extends FormRequest implements SaveIngredientRequestContract
 {
     /**
      * Определить, авторизован ли пользователь для этого запроса.
@@ -32,7 +37,6 @@ class SaveIngredientRequest extends FormRequest
             'meta.og:title.max' => 'Поле «og:itle» не должно превышать 255 символов',
             'meta.og:description.max' => 'Поле «og:description» не должно превышать 255 символов',
 
-            'og_image.crop.default.crop_size' => 'Минимальный размер области — 968x475 пикселей',
             'og_image.crop.default.json' => 'Область отображения должна быть представлена в виде JSON',
 
             'title.required' => 'Поле «Заголовок» обязательно для заполнения',
@@ -46,7 +50,6 @@ class SaveIngredientRequest extends FormRequest
 
             'preview.crop.default.required' => 'Необходимо выбрать область отображения',
             'preview.crop.default.json' => 'Область отображения должна быть представлена в виде JSON',
-            'preview.crop.default.crop_size' => 'Минимальный размер области — 300x280 пикселей',
             'preview.description.max' => 'Поле «Описание» не должно превышать 255 символов',
             'preview.copyright.max' => 'Поле «Copyright» не должно превышать 255 символов',
             'preview.alt.required' => 'Поле «Alt» обязательно для заполнения',
@@ -62,6 +65,7 @@ class SaveIngredientRequest extends FormRequest
      * Правила проверки запроса.
      *
      * @param Request $request
+     *
      * @return array
      */
     public function rules(Request $request)
@@ -73,12 +77,26 @@ class SaveIngredientRequest extends FormRequest
             'meta.og:title' => 'max:255',
             'meta.og:description' => 'max:255',
 
-            'og_image.crop.default' => 'nullable|json|crop_size:968,475,min',
+            'og_image.crop.default' => [
+                'nullable', 'json',
+                new CropSize(968,475,'min', ''),
+            ],
 
             'title' => 'required|max:255|unique:ingredients,title,'.$request->get('ingredient_id'),
             'slug' => 'required|alpha_dash|max:255|unique:ingredients,slug,'.$request->get('ingredient_id'),
 
-            'preview.crop.default' => 'required|json|crop_size:300,280,min',
+            'preview.crop.default' => [
+                'required', 'nullable', 'json',
+                new CropSize(300,280,'min', 'По умолчанию'),
+            ],
+            'preview.crop.3_2' => [
+                'nullable', 'json',
+                new CropSize(768,512,'min', '3x2'),
+            ],
+            'preview.crop.3_4' => [
+                'nullable', 'json',
+                new CropSize(384,512,'min', '3x4'),
+            ],
             'preview.description' => 'max:255',
             'preview.copyright' => 'max:255',
             'preview.alt' => 'required|max:255',

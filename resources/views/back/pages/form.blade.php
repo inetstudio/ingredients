@@ -9,10 +9,7 @@
 @section('content')
 
     @push('breadcrumbs')
-        @include('admin.module.ingredients::back.partials.breadcrumbs')
-        <li>
-            <a href="{{ route('back.ingredients.index') }}">Ингредиенты</a>
-        </li>
+        @include('admin.module.ingredients::back.partials.breadcrumbs.form')
     @endpush
 
     <div class="row m-sm">
@@ -34,13 +31,13 @@
 
         {!! Form::info() !!}
 
-        {!! Form::open(['url' => (!$item->id) ? route('back.ingredients.store') : route('back.ingredients.update', [$item->id]), 'id' => 'mainForm', 'enctype' => 'multipart/form-data', 'class' => 'form-horizontal']) !!}
+        {!! Form::open(['url' => (! $item->id) ? route('back.ingredients.store') : route('back.ingredients.update', [$item->id]), 'id' => 'mainForm', 'enctype' => 'multipart/form-data', 'class' => 'form-horizontal']) !!}
 
             @if ($item->id)
                 {{ method_field('PUT') }}
             @endif
 
-            {!! Form::hidden('ingredient_id', (!$item->id) ? '' : $item->id) !!}
+            {!! Form::hidden('ingredient_id', (! $item->id) ? '' : $item->id) !!}
 
             {!! Form::buttons('', '', ['back' => 'back.ingredients.index']) !!}
 
@@ -91,7 +88,8 @@
                                             'title' => 'Превью',
                                         ],
                                         'image' => [
-                                            'src' => isset($previewImageMedia) ? url($previewImageMedia->getUrl()) : '',
+                                            'filepath' => isset($previewImageMedia) ? url($previewImageMedia->getUrl()) : '',
+                                            'filename' => isset($previewImageMedia) ? $previewImageMedia->file_name : '',
                                         ],
                                         'crops' => [
                                             [
@@ -219,7 +217,7 @@
                 </div>
             </div>
 
-            {!! Form::products('products', $item->products, ['table' => $productsTable])!!}
+            {!! Form::products('products', $item->products)!!}
 
             {!! Form::buttons('', '', ['back' => 'back.ingredients.index']) !!}
 

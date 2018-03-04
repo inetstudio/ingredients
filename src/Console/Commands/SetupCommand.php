@@ -6,8 +6,7 @@ use Illuminate\Console\Command;
 use Symfony\Component\Process\Process;
 
 /**
- * Class SetupCommand
- * @package InetStudio\Ingredients\Console\Commands
+ * Class SetupCommand.
  */
 class SetupCommand extends Command
 {
@@ -70,15 +69,6 @@ class SetupCommand extends Command
     private function initCommands(): void
     {
         $this->calls = [
-            (! class_exists('CreateLikeCounterTable')) ? [
-                'type' => 'artisan',
-                'description' => 'Likeable setup',
-                'command' => 'vendor:publish',
-                'params' => [
-                    '--provider' => 'Cog\Likeable\Providers\LikeableServiceProvider',
-                    '--tag' => 'migrations',
-                ],
-            ] : [],
             [
                 'type' => 'artisan',
                 'description' => 'Publish migrations',

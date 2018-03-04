@@ -5,8 +5,8 @@ namespace InetStudio\Ingredients\Models\Traits;
 use Illuminate\Database\Eloquent\Model;
 use Illuminate\Database\Eloquent\Builder;
 use Illuminate\Database\Eloquent\Collection;
-use InetStudio\Ingredients\Models\IngredientModel;
 use Illuminate\Database\Eloquent\Relations\MorphToMany;
+use InetStudio\Ingredients\Contracts\Models\IngredientModelContract;
 
 trait HasIngredients
 {
@@ -24,7 +24,8 @@ trait HasIngredients
      */
     public static function getIngredientClassName(): string
     {
-        return IngredientModel::class;
+        $model = app()->make('InetStudio\Ingredients\Contracts\Models\IngredientModelContract');
+        return get_class($model);
     }
 
     /**
@@ -40,7 +41,7 @@ trait HasIngredients
     /**
      * Attach the given ingredient(s) to the model.
      *
-     * @param int|string|array|\ArrayAccess|IngredientModel $ingredients
+     * @param int|string|array|\ArrayAccess|IngredientModelContract $ingredients
      *
      * @return void
      */
@@ -90,7 +91,7 @@ trait HasIngredients
      * Scope query with all the given ingredients.
      *
      * @param \Illuminate\Database\Eloquent\Builder $query
-     * @param int|string|array|\ArrayAccess|IngredientModel $ingredients
+     * @param int|string|array|\ArrayAccess|IngredientModelContract $ingredients
      * @param string $column
      *
      * @return \Illuminate\Database\Eloquent\Builder
@@ -113,7 +114,7 @@ trait HasIngredients
      * Scope query with any of the given ingredients.
      *
      * @param \Illuminate\Database\Eloquent\Builder $query
-     * @param int|string|array|\ArrayAccess|IngredientModel $ingredients
+     * @param int|string|array|\ArrayAccess|IngredientModelContract $ingredients
      * @param string $column
      *
      * @return \Illuminate\Database\Eloquent\Builder
@@ -132,7 +133,7 @@ trait HasIngredients
      * Scope query with any of the given ingredients.
      *
      * @param \Illuminate\Database\Eloquent\Builder $query
-     * @param int|string|array|\ArrayAccess|IngredientModel $ingredients
+     * @param int|string|array|\ArrayAccess|IngredientModelContract $ingredients
      * @param string $column
      *
      * @return \Illuminate\Database\Eloquent\Builder
@@ -146,7 +147,7 @@ trait HasIngredients
      * Scope query without the given ingredients.
      *
      * @param \Illuminate\Database\Eloquent\Builder $query
-     * @param int|string|array|\ArrayAccess|IngredientModel $ingredients
+     * @param int|string|array|\ArrayAccess|IngredientModelContract $ingredients
      * @param string $column
      *
      * @return \Illuminate\Database\Eloquent\Builder
@@ -176,7 +177,7 @@ trait HasIngredients
     /**
      * Attach the given Ingredient(ies) to the model.
      *
-     * @param int|string|array|\ArrayAccess|IngredientModel $ingredients
+     * @param int|string|array|\ArrayAccess|IngredientModelContract $ingredients
      *
      * @return $this
      */
@@ -190,7 +191,7 @@ trait HasIngredients
     /**
      * Sync the given ingredient(s) to the model.
      *
-     * @param int|string|array|\ArrayAccess|IngredientModel|null $ingredients
+     * @param int|string|array|\ArrayAccess|IngredientModelContract|null $ingredients
      *
      * @return $this
      */
@@ -204,7 +205,7 @@ trait HasIngredients
     /**
      * Detach the given Ingredient(s) from the model.
      *
-     * @param int|string|array|\ArrayAccess|IngredientModel $ingredients
+     * @param int|string|array|\ArrayAccess|IngredientModelContract $ingredients
      *
      * @return $this
      */
@@ -218,7 +219,7 @@ trait HasIngredients
     /**
      * Determine if the model has any the given ingredients.
      *
-     * @param int|string|array|\ArrayAccess|IngredientModel $ingredients
+     * @param int|string|array|\ArrayAccess|IngredientModelContract $ingredients
      *
      * @return bool
      */
@@ -235,7 +236,7 @@ trait HasIngredients
         }
 
         // Single Ingredient model
-        if ($ingredients instanceof IngredientModel) {
+        if ($ingredients instanceof IngredientModelContract) {
             return $this->ingredients->contains('slug', $ingredients->slug);
         }
 
@@ -260,7 +261,7 @@ trait HasIngredients
     /**
      * Determine if the model has any the given ingredients.
      *
-     * @param int|string|array|\ArrayAccess|IngredientModel $ingredients
+     * @param int|string|array|\ArrayAccess|IngredientModelContract $ingredients
      *
      * @return bool
      */
@@ -272,7 +273,7 @@ trait HasIngredients
     /**
      * Determine if the model has all of the given ingredients.
      *
-     * @param int|string|array|\ArrayAccess|IngredientModel $ingredients
+     * @param int|string|array|\ArrayAccess|IngredientModelContract $ingredients
      *
      * @return bool
      */
@@ -289,7 +290,7 @@ trait HasIngredients
         }
 
         // Single ingredient model
-        if ($ingredients instanceof IngredientModel) {
+        if ($ingredients instanceof IngredientModelContract) {
             return $this->ingredients->contains('slug', $ingredients->slug);
         }
 
@@ -316,7 +317,7 @@ trait HasIngredients
     /**
      * Set the given ingredient(s) to the model.
      *
-     * @param int|string|array|\ArrayAccess|IngredientModel $ingredients
+     * @param int|string|array|\ArrayAccess|IngredientModelContract $ingredients
      * @param string $action
      *
      * @return void
@@ -342,7 +343,7 @@ trait HasIngredients
     /**
      * Hydrate ingredients.
      *
-     * @param int|string|array|\ArrayAccess|IngredientModel $ingredients
+     * @param int|string|array|\ArrayAccess|IngredientModelContract $ingredients
      *
      * @return \Illuminate\Support\Collection
      */
@@ -360,7 +361,7 @@ trait HasIngredients
     /**
      * Determine if the given ingredient(s) are string based.
      *
-     * @param int|string|array|\ArrayAccess|IngredientModel $ingredients
+     * @param int|string|array|\ArrayAccess|IngredientModelContract $ingredients
      *
      * @return bool
      */
@@ -372,7 +373,7 @@ trait HasIngredients
     /**
      * Determine if the given ingredient(s) are integer based.
      *
-     * @param int|string|array|\ArrayAccess|IngredientModel $ingredients
+     * @param int|string|array|\ArrayAccess|IngredientModelContract $ingredients
      *
      * @return bool
      */

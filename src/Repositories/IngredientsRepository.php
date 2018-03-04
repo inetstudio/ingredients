@@ -111,7 +111,7 @@ class IngredientsRepository implements IngredientsRepositoryContract
     public function searchItemsByField(string $field, string $value, bool $returnBuilder = false)
     {
         $builder = $this->getItemsQuery(['title'])->where($field, 'LIKE', '%'.$value.'%');
-        
+
         if ($returnBuilder) {
             return $builder;
         }
@@ -129,7 +129,7 @@ class IngredientsRepository implements IngredientsRepositoryContract
     public function getAllItems(bool $returnBuilder = false)
     {
         $builder = $this->getItemsQuery(['created_at', 'updated_at']);
-        
+
         if ($returnBuilder) {
             return $builder;
         }
@@ -162,11 +162,11 @@ class IngredientsRepository implements IngredientsRepositoryContract
     public function getItemBySlug(string $slug, bool $returnBuilder = false)
     {
         $builder = $this->getItemsQuery([
-            'description', 'content', 'status_id', 'publish_date'
+            'description', 'content', 'status_id', 'publish_date',
         ], [
-            'meta', 'media', 'tags', 'products'
+            'meta', 'media', 'tags', 'products',
         ])->whereSlug($slug);
-        
+
         if ($returnBuilder) {
             return $builder;
         }

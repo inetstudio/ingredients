@@ -105,7 +105,7 @@ class IngredientsServiceProvider extends ServiceProvider
         view()->composer('admin.module.ingredients::back.partials.analytics.materials.statistic', function ($view) {
             $ingredients = app()->make('InetStudio\Ingredients\Contracts\Repositories\IngredientsRepositoryContract')
                 ->getAllItems(true)
-                ->addSelect(['status_id', DB::raw('count(*) as total')])
+                ->select(['status_id', DB::raw('count(*) as total')])
                 ->with('status')
                 ->groupBy('status_id')
                 ->get();

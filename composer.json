@@ -10,14 +10,14 @@
       }
     ],
     "require": {
-      "inetstudio/admin-panel": "1.5.*",
-      "inetstudio/classifiers": "1.5.*",
-      "inetstudio/comments": "1.5.*",
-      "inetstudio/experts": "1.5.*",
-      "inetstudio/favorites": "1.5.*",
-      "inetstudio/polls": "1.5.*",
-      "inetstudio/products": "1.5.*",
-      "inetstudio/rating": "1.5.*"
+      "inetstudio/admin-panel": "1.6.*",
+      "inetstudio/classifiers": "1.6.*",
+      "inetstudio/comments": "1.6.*",
+      "inetstudio/experts": "1.6.*",
+      "inetstudio/favorites": "1.6.*",
+      "inetstudio/polls": "1.6.*",
+      "inetstudio/products": "1.6.*",
+      "inetstudio/rating": "1.6.*"
     },
     "autoload": {
       "psr-4": {

@@ -227,6 +227,7 @@
     @include('admin.module.articles::back.pages.modals.suggestion')
     @include('admin.module.experts::back.pages.modals.suggestion')
     @include('admin.module.ingredients::back.pages.modals.suggestion')
+    @include('admin.module.products::back.pages.modals.suggestion')
     @include('admin.module.polls::back.pages.modals.form')
 
 @endsection

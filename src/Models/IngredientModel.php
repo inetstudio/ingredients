@@ -78,6 +78,11 @@ class IngredientModel extends Model implements IngredientModelContract, MetableC
         'deleted_at',
     ];
 
+    public function getContentAttribute($value)
+    {
+        return blade_string($value);
+    }
+
     protected $revisionCreationsEnabled = true;
 
     use Status;

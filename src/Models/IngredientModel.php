@@ -76,6 +76,7 @@ class IngredientModel extends Model implements IngredientModelContract, MetableC
         'created_at',
         'updated_at',
         'deleted_at',
+        'publish_date',
     ];
 
     public function getContentAttribute($value)

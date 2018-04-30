@@ -159,7 +159,7 @@
                                         ],
                                     ]) !!}
 
-                                    {!! Form::wysiwyg('content', $item->getAttributes()['content'], [
+                                    {!! Form::wysiwyg('content', $item->content, [
                                         'label' => [
                                             'title' => 'Содержимое',
                                         ],

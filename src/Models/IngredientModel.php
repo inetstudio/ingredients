@@ -79,11 +79,6 @@ class IngredientModel extends Model implements IngredientModelContract, MetableC
         'publish_date',
     ];
 
-    public function getContentAttribute($value)
-    {
-        return blade_string($value);
-    }
-
     protected $revisionCreationsEnabled = true;
 
     use Status;

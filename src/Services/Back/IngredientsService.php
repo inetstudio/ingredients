@@ -84,6 +84,9 @@ class IngredientsService implements IngredientsServiceContract
         app()->make('InetStudio\Classifiers\Contracts\Services\Back\ClassifiersServiceContract')
             ->attachToObject($request, $item);
 
+        app()->make('InetStudio\Widgets\Contracts\Services\Back\WidgetsServiceContract')
+            ->attachToObject($request, $item);
+
         $item->searchable();
 
         event(app()->makeWith('InetStudio\Ingredients\Contracts\Events\Back\ModifyIngredientEventContract', [

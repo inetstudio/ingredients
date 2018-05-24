@@ -12,6 +12,7 @@ use Illuminate\Database\Eloquent\SoftDeletes;
 use InetStudio\Rating\Models\Traits\Rateable;
 use InetStudio\Statuses\Models\Traits\Status;
 use InetStudio\Uploads\Models\Traits\HasImages;
+use InetStudio\Widgets\Models\Traits\HasWidgets;
 use Venturecraft\Revisionable\RevisionableTrait;
 use InetStudio\Comments\Models\Traits\HasComments;
 use InetStudio\Products\Models\Traits\HasProducts;
@@ -32,6 +33,7 @@ class IngredientModel extends Model implements IngredientModelContract, MetableC
     use Rateable;
     use Sluggable;
     use HasImages;
+    use HasWidgets;
     use Searchable;
     use Favoritable;
     use HasComments;

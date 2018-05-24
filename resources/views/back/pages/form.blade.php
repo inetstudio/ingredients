@@ -37,7 +37,9 @@
                 {{ method_field('PUT') }}
             @endif
 
-            {!! Form::hidden('ingredient_id', (! $item->id) ? '' : $item->id) !!}
+            {!! Form::hidden('ingredient_id', (! $item->id) ? '' : $item->id, ['id' => 'object-id']) !!}
+
+            {!! Form::hidden('ingredient_type', get_class($item), ['id' => 'object-type']) !!}
 
             {!! Form::buttons('', '', ['back' => 'back.ingredients.index']) !!}
 
@@ -186,6 +188,8 @@
                                             ],
                                         ],
                                     ]) !!}
+
+                                    {!! Form::widgets('', $item) !!}
 
                                     {!! Form::tags('', $item) !!}
 

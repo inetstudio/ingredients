@@ -29,6 +29,18 @@ class IngredientsService implements IngredientsServiceContract
     }
 
     /**
+     * Получаем объект по id.
+     *
+     * @param int $id
+     *
+     * @return mixed
+     */
+    public function getIngredientById(int $id = 0)
+    {
+        return $this->repository->getItemByID($id);
+    }
+
+    /**
      * Получаем объект по slug.
      *
      * @param string $slug

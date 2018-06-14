@@ -120,7 +120,7 @@ class IngredientsService implements IngredientsServiceContract
      */
     public function getSuggestions(string $search, $type): array
     {
-        $items = $this->repository->searchItemsByField('title', $search);
+        $items = $this->repository->searchItems([['title', 'LIKE', '%'.$search.'%']]);
 
         $resource = (app()->makeWith('InetStudio\Ingredients\Contracts\Transformers\Back\SuggestionTransformerContract', [
             'type' => $type,
@@ -152,7 +152,7 @@ class IngredientsService implements IngredientsServiceContract
         if ($request->filled('ingredients')) {
             $item->syncIngredients($this->repository->getItemsByIDs((array) $request->get('ingredients')));
         } else {
-            $item->detachIngredients($item->tags);
+            $item->detachIngredients($item->ingredients);
         }
     }
 }

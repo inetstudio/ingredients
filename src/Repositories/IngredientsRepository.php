@@ -118,13 +118,15 @@ class IngredientsRepository implements IngredientsRepositoryContract
     /**
      * Получаем все объекты.
      *
+     * @param array $extColumns
+     * @param array $with
      * @param bool $returnBuilder
      *
      * @return mixed
      */
-    public function getAllItems(bool $returnBuilder = false)
+    public function getAllItems(array $extColumns = [], array $with = [], bool $returnBuilder = false)
     {
-        $builder = $this->getItemsQuery(['created_at', 'updated_at']);
+        $builder = $this->getItemsQuery(array_merge($extColumns, ['created_at', 'updated_at']), $with);
 
         if ($returnBuilder) {
             return $builder;

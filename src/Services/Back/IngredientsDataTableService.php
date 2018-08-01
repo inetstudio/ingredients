@@ -52,7 +52,7 @@ class IngredientsDataTableService extends DataTable implements IngredientsDataTa
      */
     public function query()
     {
-        $query = $this->repository->getAllItems(true)
+        $query = $this->repository->getAllItems([], [], true)
             ->addSelect(['status_id', 'publish_date'])
             ->with(['status']);
 

@@ -62,7 +62,7 @@ class IngredientsService implements IngredientsServiceContract
      */
     public function getAllIngredients(bool $returnBuilder = false)
     {
-        return $this->repository->getAllItems($returnBuilder);
+        return $this->repository->getAllItems([], [], $returnBuilder);
     }
 
     /**
@@ -84,7 +84,7 @@ class IngredientsService implements IngredientsServiceContract
      */
     public function getFeedItems(): array
     {
-        $items = $this->repository->getAllItems(true)
+        $items = $this->repository->getAllItems([], [], true)
             ->whereNotNull('publish_date')
             ->orderBy('publish_date', 'desc')
             ->limit(500)

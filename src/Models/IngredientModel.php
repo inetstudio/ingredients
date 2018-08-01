@@ -45,7 +45,8 @@ class IngredientModel extends Model implements IngredientModelContract, MetableC
     use HasSimpleCountersTrait;
 
     const HREF = '/ingredient/';
-    const MATERIAL_TYPE = 'ingredient';
+
+    const ENTITY_TYPE = 'ingredient';
 
     protected $images = [
         'config' => 'ingredients',
@@ -158,6 +159,6 @@ class IngredientModel extends Model implements IngredientModelContract, MetableC
      */
     public function getTypeAttribute()
     {
-        return self::MATERIAL_TYPE;
+        return self::ENTITY_TYPE;
     }
 }

@@ -102,6 +102,26 @@ class IngredientsService implements IngredientsServiceContract
     }
 
     /**
+     * Получаем информацию по статьям для фида mindbox.
+     *
+     * @return array
+     */
+    public function getMindboxFeedItems(): array
+    {
+        $items = $this->repository->getAllItems(['title', 'description', 'status_id'], ['media', 'categories', 'tags'], true)->get();
+
+        $resource = app()->make('InetStudio\Ingredients\Contracts\Transformers\Front\IngredientsMindboxFeedItemsTransformerContract')
+            ->transformCollection($items);
+
+        $manager = new Manager();
+        $manager->setSerializer(new DataArraySerializer());
+
+        $transformation = $manager->createData($resource)->toArray();
+
+        return $transformation['data'];
+    }
+
+    /**
      * Получаем информацию по ингредиентам для карты сайта.
      *
      * @return array

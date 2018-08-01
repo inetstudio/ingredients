@@ -36,8 +36,8 @@ class IngredientsMindboxFeedItemsTransformer extends TransformerAbstract impleme
             'name' => $item->title,
             'url' => $item->href,
             'description' => html_entity_decode(strip_tags($item->description)),
-            'categories' => $item->categories->pluck('id')->toArray(),
-            'tags' => implode('|', $item->tags->pluck('name')->toArray()),
+            'categories' => [],
+            'tags' => ($item->tags->count() > 0) ? implode('|', $item->tags->pluck('name')->toArray()) : '',
             'type' => 'Ингредиент',
         ];
     }

@@ -20,7 +20,6 @@ class IngredientsServiceProvider extends ServiceProvider
         $this->registerPublishes();
         $this->registerRoutes();
         $this->registerViews();
-        $this->registerViewComposers();
     }
 
     /**

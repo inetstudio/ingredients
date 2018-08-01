@@ -2,7 +2,6 @@
 
 namespace InetStudio\Ingredients\Providers;
 
-use Illuminate\Support\Facades\DB;
 use Illuminate\Support\ServiceProvider;
 
 /**
@@ -82,24 +81,5 @@ class IngredientsServiceProvider extends ServiceProvider
     protected function registerViews(): void
     {
         $this->loadViewsFrom(__DIR__.'/../../resources/views', 'admin.module.ingredients');
-    }
-
-    /**
-     * Register Ingredient's view composers.
-     *
-     * @return void
-     */
-    public function registerViewComposers(): void
-    {
-        view()->composer('admin.module.ingredients::back.partials.analytics.materials.statistic', function ($view) {
-            $ingredients = app()->make('InetStudio\Ingredients\Contracts\Repositories\IngredientsRepositoryContract')
-                ->getAllItems([], [], true)
-                ->select(['status_id', DB::raw('count(*) as total')])
-                ->with('status')
-                ->groupBy('status_id')
-                ->get();
-
-            $view->with('ingredients', $ingredients);
-        });
     }
 }

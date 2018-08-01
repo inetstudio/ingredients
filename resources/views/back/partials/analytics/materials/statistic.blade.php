@@ -1,3 +1,9 @@
+@inject('ingredientsService', 'InetStudio\Ingredients\Contracts\Services\Back\IngredientsServiceContract')
+
+@php
+    $ingredients = $ingredientsService->getIngredientsStatisticByStatus();
+@endphp
+
 <li>
     <small class="label label-default">{{ $ingredients->sum('total') }}</small>
     <span class="m-l-xs">Ингредиенты</span>

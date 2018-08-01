@@ -6,7 +6,6 @@ use League\Fractal\Manager;
 use Illuminate\Support\Collection;
 use League\Fractal\Serializer\DataArraySerializer;
 use InetStudio\Ingredients\Contracts\Services\Front\IngredientsServiceContract;
-use InetStudio\Ingredients\Contracts\Repositories\IngredientsRepositoryContract;
 
 /**
  * Class IngredientsService.
@@ -14,18 +13,16 @@ use InetStudio\Ingredients\Contracts\Repositories\IngredientsRepositoryContract;
 class IngredientsService implements IngredientsServiceContract
 {
     /**
-     * @var IngredientsRepositoryContract
+     * @var
      */
-    private $repository;
+    public $repository;
 
     /**
      * IngredientsService constructor.
-     *
-     * @param IngredientsRepositoryContract $repository
      */
-    public function __construct(IngredientsRepositoryContract $repository)
+    public function __construct()
     {
-        $this->repository = $repository;
+        $this->repository = app()->make('InetStudio\Ingredients\Contracts\Repositories\IngredientsRepositoryContract');
     }
 
     /**
@@ -41,28 +38,77 @@ class IngredientsService implements IngredientsServiceContract
     }
 
     /**
-     * Получаем объект по slug.
+     * Получаем объекты по id.
      *
-     * @param string $slug
+     * @param $ids
+     * @param array $extColumns
+     * @param array $with
      * @param bool $returnBuilder
      *
      * @return mixed
      */
-    public function getIngredientBySlug(string $slug, bool $returnBuilder = false)
+    public function getIngredientsByIDs($ids, array $extColumns = [], array $with = [], bool $returnBuilder = false)
     {
-        return $this->repository->getItemBySlug($slug, $returnBuilder);
+        return $this->repository->getItemsByIDs($ids, $extColumns, $with, $returnBuilder);
+    }
+
+    /**
+     * Получаем объект по slug.
+     *
+     * @param string $slug
+     * @param array $extColumns
+     * @param array $with
+     * @param bool $returnBuilder
+     *
+     * @return mixed
+     */
+    public function getIngredientBySlug(string $slug, array $extColumns = [], array $with = [], bool $returnBuilder = false)
+    {
+        return $this->repository->getItemBySlug($slug, $extColumns, $with, $returnBuilder);
+    }
+
+    /**
+     * Получаем объекты по тегу.
+     *
+     * @param string $tagSlug
+     * @param array $extColumns
+     * @param array $with
+     * @param bool $returnBuilder
+     *
+     * @return mixed
+     */
+    public function getIngredientByTag(string $tagSlug, array $extColumns = [], array $with = [], bool $returnBuilder = false)
+    {
+        return $this->repository->getItemsByTag($tagSlug, $extColumns, $with, $returnBuilder);
+    }
+
+    /**
+     * Получаем сохраненные объекты пользователя.
+     *
+     * @param int $userID
+     * @param array $extColumns
+     * @param array $with
+     * @param bool $returnBuilder
+     *
+     * @return mixed
+     */
+    public function getIngredientsFavoritedByUser(int $userID, array $extColumns = [], array $with = [], bool $returnBuilder = false)
+    {
+        return $this->repository->getItemsFavoritedByUser($userID, $extColumns, $with, $returnBuilder);
     }
 
     /**
      * Получаем все объекты.
      *
+     * @param array $extColumns
+     * @param array $with
      * @param bool $returnBuilder
      *
      * @return mixed
      */
-    public function getAllIngredients(bool $returnBuilder = false)
+    public function getAllIngredients(array $extColumns = [], array $with = [], bool $returnBuilder = false)
     {
-        return $this->repository->getAllItems([], [], $returnBuilder);
+        return $this->repository->getAllItems($extColumns, $with, $returnBuilder);
     }
 
     /**
@@ -74,7 +120,9 @@ class IngredientsService implements IngredientsServiceContract
      */
     public function getIngredientsByMaterials(Collection $materials): Collection
     {
-        return $this->repository->getItemsByMaterials($materials);
+        return $materials->map(function ($item) {
+            return (method_exists($item, 'ingredients')) ? $item->ingredients : [];
+        })->filter()->collapse()->unique('id');
     }
 
     /**

@@ -5,19 +5,25 @@ namespace InetStudio\Ingredients\Repositories;
 use Illuminate\Support\Carbon;
 use Illuminate\Support\Collection;
 use Illuminate\Database\Eloquent\Builder;
+use InetStudio\Tags\Repositories\Traits\TagsRepositoryTrait;
 use InetStudio\Ingredients\Contracts\Models\IngredientModelContract;
+use InetStudio\Favorites\Repositories\Traits\FavoritesRepositoryTrait;
 use InetStudio\Ingredients\Contracts\Repositories\IngredientsRepositoryContract;
-use InetStudio\Ingredients\Contracts\Http\Requests\Back\SaveIngredientRequestContract;
 
 /**
  * Class IngredientsRepository.
  */
 class IngredientsRepository implements IngredientsRepositoryContract
 {
+    use TagsRepositoryTrait;
+    use FavoritesRepositoryTrait;
+
+    protected $favoritesType = 'ingredient';
+
     /**
      * @var IngredientModelContract
      */
-    private $model;
+    public $model;
 
     /**
      * IngredientsRepository constructor.
@@ -27,6 +33,28 @@ class IngredientsRepository implements IngredientsRepositoryContract
     public function __construct(IngredientModelContract $model)
     {
         $this->model = $model;
+    }
+
+    /**
+     * Получаем модель репозитория.
+     *
+     * @return IngredientModelContract
+     */
+    public function getModel()
+    {
+        return $this->model;
+    }
+
+    /**
+     * Возвращаем пустой объект по id.
+     *
+     * @param int $id
+     *
+     * @return mixed
+     */
+    public function getEmptyObjectById(int $id)
+    {
+        return $this->model::select(['id'])->where('id', '=', $id)->first();
     }
 
     /**
@@ -45,13 +73,15 @@ class IngredientsRepository implements IngredientsRepositoryContract
      * Возвращаем объекты по списку id.
      *
      * @param $ids
+     * @param array $extColumns
+     * @param array $with
      * @param bool $returnBuilder
      *
      * @return mixed
      */
-    public function getItemsByIDs($ids, bool $returnBuilder = false)
+    public function getItemsByIDs($ids, array $extColumns = [], array $with = [], bool $returnBuilder = false)
     {
-        $builder = $this->getItemsQuery()->whereIn('id', (array) $ids);
+        $builder = $this->getItemsQuery($extColumns, $with)->whereIn('id', (array) $ids);
 
         if ($returnBuilder) {
             return $builder;
@@ -63,22 +93,15 @@ class IngredientsRepository implements IngredientsRepositoryContract
     /**
      * Сохраняем объект.
      *
-     * @param SaveIngredientRequestContract $request
+     * @param array $data
      * @param int $id
      *
      * @return IngredientModelContract
      */
-    public function save(SaveIngredientRequestContract $request, int $id): IngredientModelContract
+    public function save(array $data, int $id): IngredientModelContract
     {
         $item = $this->getItemByID($id);
-
-        $item->title = strip_tags($request->get('title'));
-        $item->slug = strip_tags($request->get('slug'));
-        $item->description = $request->input('description.text');
-        $item->content = $request->input('content.text');
-        $item->webmaster_id = ($item->webmaster_id) ? $item->webmaster_id : '';
-        $item->status_id = ($request->filled('status_id')) ? $request->get('status_id') : 1;
-        $item->publish_date = ($request->filled('publish_date')) ? Carbon::createFromFormat('d.m.Y H:i', $request->get('publish_date')) : null;
+        $item->fill($data);
         $item->save();
 
         return $item;
@@ -100,13 +123,15 @@ class IngredientsRepository implements IngredientsRepositoryContract
      * Ищем объекты.
      *
      * @param array $conditions
+     * @param array $extColumns
+     * @param array $with
      * @param bool $returnBuilder
      *
      * @return mixed
      */
-    public function searchItems(array $conditions, bool $returnBuilder = false)
+    public function searchItems(array $conditions, array $extColumns = [], array $with = [], bool $returnBuilder = false)
     {
-        $builder = $this->getItemsQuery([])->where($conditions);
+        $builder = $this->getItemsQuery($extColumns, $with)->where($conditions);
 
         if ($returnBuilder) {
             return $builder;
@@ -136,34 +161,18 @@ class IngredientsRepository implements IngredientsRepositoryContract
     }
 
     /**
-     * Возвращаем объекты, привязанные к материалам.
-     *
-     * @param Collection $materials
-     *
-     * @return Collection
-     */
-    public function getItemsByMaterials(Collection $materials): Collection
-    {
-        return $materials->map(function ($item) {
-            return (method_exists($item, 'ingredients')) ? $item->ingredients : [];
-        })->filter()->collapse()->unique('id');
-    }
-
-    /**
      * Получаем объекты по slug.
      *
      * @param string $slug
+     * @param array $extColumns
+     * @param array $with
      * @param bool $returnBuilder
      *
      * @return mixed
      */
-    public function getItemBySlug(string $slug, bool $returnBuilder = false)
+    public function getItemBySlug(string $slug, array $extColumns = [], array $with = [], bool $returnBuilder = false)
     {
-        $builder = $this->getItemsQuery([
-            'description', 'content', 'status_id', 'publish_date',
-        ], [
-            'meta', 'media', 'tags', 'products',
-        ])->whereSlug($slug);
+        $builder = $this->getItemsQuery($extColumns, $with)->whereSlug($slug);
 
         if ($returnBuilder) {
             return $builder;
@@ -172,29 +181,6 @@ class IngredientsRepository implements IngredientsRepositoryContract
         $item = $builder->first();
 
         return $item;
-    }
-
-    /**
-     * Получаем сохраненные объекты пользователя.
-     *
-     * @param int $userID
-     * @param bool $returnBuilder
-     *
-     * @return mixed
-     */
-    public function getItemsFavoritedByUser(int $userID, bool $returnBuilder = false)
-    {
-        $builder = $this->getItemsQuery(['publish_date'], ['media', 'tags', 'products', 'counters'])
-            ->orderBy('publish_date', 'DESC')
-            ->whereFavoritedBy('ingredient', $userID);
-
-        if ($returnBuilder) {
-            return $builder;
-        }
-
-        $items = $builder->get();
-
-        return $items;
     }
 
     /**
@@ -220,6 +206,10 @@ class IngredientsRepository implements IngredientsRepositoryContract
 
             'tags' => function ($query) {
                 $query->select(['id', 'name', 'slug']);
+            },
+
+            'counters' => function ($query) {
+                $query->select(['countable_id', 'countable_type', 'type', 'counter']);
             },
 
             'products' => function ($query) {

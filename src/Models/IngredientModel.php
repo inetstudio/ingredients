@@ -4,6 +4,7 @@ namespace InetStudio\Ingredients\Models;
 
 use Cocur\Slugify\Slugify;
 use Laravel\Scout\Searchable;
+use Illuminate\Support\Carbon;
 use Illuminate\Database\Eloquent\Model;
 use Cviebrock\EloquentSluggable\Sluggable;
 use InetStudio\Meta\Models\Traits\Metable;
@@ -44,13 +45,12 @@ class IngredientModel extends Model implements IngredientModelContract, MetableC
     use SluggableScopeHelpers;
     use HasSimpleCountersTrait;
 
-    const HREF = '/ingredient/';
-
     const ENTITY_TYPE = 'ingredient';
+    const BASE_MATERIAL_TYPE = 'ingredient';
 
     protected $images = [
         'config' => 'ingredients',
-        'model' => 'ingredient',
+        'model' => '',
     ];
 
     /**
@@ -83,6 +83,117 @@ class IngredientModel extends Model implements IngredientModelContract, MetableC
     ];
 
     protected $revisionCreationsEnabled = true;
+
+    /**
+     * Сеттер атрибута title.
+     *
+     * @param $value
+     */
+    public function setTitleAttribute($value)
+    {
+        $this->attributes['title'] = strip_tags($value);
+    }
+
+    /**
+     * Сеттер атрибута slug.
+     *
+     * @param $value
+     */
+    public function setSlugAttribute($value)
+    {
+        $this->attributes['slug'] = strip_tags($value);
+    }
+
+    /**
+     * Сеттер атрибута description.
+     *
+     * @param $value
+     */
+    public function setDescriptionAttribute($value)
+    {
+        $this->attributes['description'] = trim(str_replace("&nbsp;", '', strip_tags((isset($value['text'])) ? $value['text'] : (! is_array($value) ? $value : ''))));
+    }
+
+    /**
+     * Сеттер атрибута content.
+     *
+     * @param $value
+     */
+    public function setContentAttribute($value)
+    {
+        $this->attributes['content'] = trim(str_replace("&nbsp;", ' ', (isset($value['text'])) ? $value['text'] : (! is_array($value) ? $value : '')));
+    }
+
+    /**
+     * Сеттер атрибута publish_date.
+     *
+     * @param $value
+     */
+    public function setPublishDateAttribute($value)
+    {
+        $this->attributes['publish_date'] = ($value) ? Carbon::createFromFormat('d.m.Y H:i', $value) : null;
+    }
+
+    /**
+     * Сеттер атрибута webmaster_id.
+     *
+     * @param $value
+     */
+    public function setWebmasterIdAttribute($value)
+    {
+        $this->attributes['webmaster_id'] = strip_tags($value);
+    }
+
+    /**
+     * Сеттер атрибута status_id.
+     *
+     * @param $value
+     */
+    public function setStatusIdAttribute($value)
+    {
+        $this->attributes['status_id'] = (! $value) ? 1 : (int) $value;
+    }
+
+    /**
+     * Сеттер атрибута material_type.
+     *
+     * @param $value
+     */
+    public function setMaterialTypeAttribute($value)
+    {
+        $this->attributes['material_type'] = ($value) ? $value : self::BASE_MATERIAL_TYPE;
+        $this->images['model'] = $this->attributes['material_type'];
+    }
+
+    /**
+     * Геттер атрибута href.
+     *
+     * @return \Illuminate\Contracts\Routing\UrlGenerator|string
+     */
+    public function getHrefAttribute()
+    {
+        return url($this->material_type.'/'.(! empty($this->slug) ? $this->slug : $this->id));
+    }
+
+    /**
+     * Геттер атрибута type.
+     *
+     * @return string
+     */
+    public function getTypeAttribute()
+    {
+        return self::ENTITY_TYPE;
+    }
+
+    /**
+     * Геттер атрибута material_type.
+     *
+     * @return string
+     */
+    public function getMaterialTypeAttribute()
+    {
+        return self::BASE_MATERIAL_TYPE;
+    }
 
     use Status;
 
@@ -140,25 +251,5 @@ class IngredientModel extends Model implements IngredientModelContract, MetableC
         $engine->addRules($rules);
 
         return $engine;
-    }
-
-    /**
-     * Ссылка на ингредиент.
-     *
-     * @return \Illuminate\Contracts\Routing\UrlGenerator|string
-     */
-    public function getHrefAttribute()
-    {
-        return url(self::HREF.(! empty($this->slug) ? $this->slug : $this->id));
-    }
-
-    /**
-     * Тип материала.
-     *
-     * @return string
-     */
-    public function getTypeAttribute()
-    {
-        return self::ENTITY_TYPE;
     }
 }

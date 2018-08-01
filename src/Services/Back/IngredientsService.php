@@ -3,11 +3,11 @@
 namespace InetStudio\Ingredients\Services\Back;
 
 use League\Fractal\Manager;
+use Illuminate\Support\Facades\DB;
 use Illuminate\Support\Facades\Session;
 use League\Fractal\Serializer\DataArraySerializer;
 use InetStudio\Ingredients\Contracts\Models\IngredientModelContract;
 use InetStudio\Ingredients\Contracts\Services\Back\IngredientsServiceContract;
-use InetStudio\Ingredients\Contracts\Repositories\IngredientsRepositoryContract;
 use InetStudio\Ingredients\Contracts\Http\Requests\Back\SaveIngredientRequestContract;
 
 /**
@@ -16,18 +16,30 @@ use InetStudio\Ingredients\Contracts\Http\Requests\Back\SaveIngredientRequestCon
 class IngredientsService implements IngredientsServiceContract
 {
     /**
-     * @var IngredientsRepositoryContract
+     * Используемые сервисы.
+     *
+     * @var array
      */
-    private $repository;
+    public $services = [];
 
     /**
-     * IngredientsService constructor.
-     *
-     * @param IngredientsRepositoryContract $repository
+     * @var
      */
-    public function __construct(IngredientsRepositoryContract $repository)
+    public $repository;
+
+    /**
+     * ArticlesService constructor.
+     */
+    public function __construct()
     {
-        $this->repository = $repository;
+        $this->services['meta'] = app()->make('InetStudio\Meta\Contracts\Services\Back\MetaServiceContract');
+        $this->services['uploads'] = app()->make('InetStudio\Uploads\Contracts\Services\Back\ImagesServiceContract');
+        $this->services['tags'] = app()->make('InetStudio\Tags\Contracts\Services\Back\TagsServiceContract');
+        $this->services['classifiers'] = app()->make('InetStudio\Classifiers\Contracts\Services\Back\ClassifiersServiceContract');
+        $this->services['products'] = app()->make('InetStudio\Products\Contracts\Services\Back\ProductsServiceContract');
+        $this->services['widgets'] = app()->make('InetStudio\Widgets\Contracts\Services\Back\WidgetsServiceContract');
+
+        $this->repository = app()->make('InetStudio\Ingredients\Contracts\Repositories\IngredientsRepositoryContract');
     }
 
     /**
@@ -43,7 +55,7 @@ class IngredientsService implements IngredientsServiceContract
     }
 
     /**
-     * Получаем объекты по списку id.
+     * Возвращаем объекты по списку id.
      *
      * @param array|int $ids
      * @param bool $returnBuilder
@@ -52,7 +64,7 @@ class IngredientsService implements IngredientsServiceContract
      */
     public function getIngredientsByIDs($ids, bool $returnBuilder = false)
     {
-        return $this->repository->getItemsByIDs($ids, $returnBuilder);
+        return $this->repository->getItemsByIDs($ids, [], [], $returnBuilder);
     }
 
     /**
@@ -66,26 +78,17 @@ class IngredientsService implements IngredientsServiceContract
     public function save(SaveIngredientRequestContract $request, int $id): IngredientModelContract
     {
         $action = ($id) ? 'отредактирован' : 'создан';
-        $item = $this->repository->save($request, $id);
+        $item = $this->repository->save($request->only($this->repository->getModel()->getFillable()), $id);
 
-        app()->make('InetStudio\Meta\Contracts\Services\Back\MetaServiceContract')
-            ->attachToObject($request, $item);
+        $this->services['meta']->attachToObject($request, $item);
 
         $images = (config('ingredients.images.conversions.ingredient')) ? array_keys(config('ingredients.images.conversions.ingredient')) : [];
-        app()->make('InetStudio\Uploads\Contracts\Services\Back\ImagesServiceContract')
-            ->attachToObject($request, $item, $images, 'ingredients', 'ingredient');
+        $this->services['uploads']->attachToObject($request, $item, $images, 'ingredients', 'ingredient');
 
-        app()->make('InetStudio\Tags\Contracts\Services\Back\TagsServiceContract')
-            ->attachToObject($request, $item);
-
-        app()->make('InetStudio\Products\Contracts\Services\Back\ProductsServiceContract')
-            ->attachToObject($request, $item);
-
-        app()->make('InetStudio\Classifiers\Contracts\Services\Back\ClassifiersServiceContract')
-            ->attachToObject($request, $item);
-
-        app()->make('InetStudio\Widgets\Contracts\Services\Back\WidgetsServiceContract')
-            ->attachToObject($request, $item);
+        $this->services['tags']->attachToObject($request, $item);
+        $this->services['classifiers']->attachToObject($request, $item);
+        $this->services['products']->attachToObject($request, $item);
+        $this->services['widgets']->attachToObject($request, $item);
 
         $item->searchable();
 
@@ -138,6 +141,21 @@ class IngredientsService implements IngredientsServiceContract
         }
 
         return $data;
+    }
+
+    /**
+     * Возвращаем статистику объектов по статусу.
+     *
+     * @return mixed
+     */
+    public function getIngredientsStatisticByStatus()
+    {
+        $articles = $this->repository->getAllItems([], ['status'], true)
+            ->select(['status_id', DB::raw('count(*) as total')])
+            ->groupBy('status_id')
+            ->get();
+
+        return $articles;
     }
 
     /**

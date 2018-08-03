@@ -158,7 +158,7 @@ class IngredientsService implements IngredientsServiceContract
     {
         $items = $this->repository->getAllItems(['title', 'description', 'status_id'], ['media', 'categories', 'tags'], true)->get();
 
-        $resource = app()->make('InetStudio\Ingredients\Contracts\Transformers\Front\IngredientsMindboxFeedItemsTransformerContract')
+        $resource = app()->make('InetStudio\Ingredients\Contracts\Transformers\Front\Feeds\Mindbox\IngredientTransformerContract')
             ->transformCollection($items);
 
         $manager = new Manager();

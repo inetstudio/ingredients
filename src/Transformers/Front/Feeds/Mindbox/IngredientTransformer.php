@@ -1,16 +1,16 @@
 <?php
 
-namespace InetStudio\Ingredients\Transformers\Front;
+namespace InetStudio\Ingredients\Transformers\Front\Feeds\Mindbox;
 
 use League\Fractal\TransformerAbstract;
 use League\Fractal\Resource\Collection as FractalCollection;
 use InetStudio\Ingredients\Contracts\Models\IngredientModelContract;
-use InetStudio\Ingredients\Contracts\Transformers\Front\IngredientsMindboxFeedItemsTransformerContract;
+use InetStudio\Ingredients\Contracts\Transformers\Front\Feeds\Mindbox\IngredientTransformerContract;
 
 /**
- * Class IngredientsMindboxFeedItemsTransformer.
+ * Class IngredientTransformer.
  */
-class IngredientsMindboxFeedItemsTransformer extends TransformerAbstract implements IngredientsMindboxFeedItemsTransformerContract
+class IngredientTransformer extends TransformerAbstract implements IngredientTransformerContract
 {
     /**
      * Подготовка данных для отображения в фиде.
@@ -30,7 +30,7 @@ class IngredientsMindboxFeedItemsTransformer extends TransformerAbstract impleme
         } catch (\Exception $e) {}
 
         return [
-            'id' => $item->id,
+            'id' => 'ingredient_'.$item->id,
             'available' => $item->status->classifiers->contains('alias', 'status_display_for_users') ? 'true' : 'false',
             'picture' => $picture,
             'name' => $item->title,

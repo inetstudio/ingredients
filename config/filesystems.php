@@ -9,8 +9,8 @@ return [
 
     'ingredients' => [
         'driver' => 'local',
-        'root' => storage_path('app/public/ingredients/'),
-        'url' => env('APP_URL').'/storage/ingredients/',
+        'root' => storage_path('app/public/ingredients'),
+        'url' => env('APP_URL').'/storage/ingredients',
         'visibility' => 'public',
     ],
 

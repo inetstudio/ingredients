@@ -9,6 +9,7 @@ use Illuminate\Database\Eloquent\Model;
 use Cviebrock\EloquentSluggable\Sluggable;
 use InetStudio\Meta\Models\Traits\Metable;
 use InetStudio\Tags\Models\Traits\HasTags;
+use Spatie\MediaLibrary\HasMedia\HasMedia;
 use Illuminate\Database\Eloquent\SoftDeletes;
 use InetStudio\Rating\Models\Traits\Rateable;
 use InetStudio\Statuses\Models\Traits\Status;
@@ -22,12 +23,11 @@ use Cviebrock\EloquentSluggable\SluggableScopeHelpers;
 use InetStudio\Classifiers\Models\Traits\HasClassifiers;
 use InetStudio\Meta\Contracts\Models\Traits\MetableContract;
 use InetStudio\Rating\Contracts\Models\Traits\RateableContract;
-use Spatie\MediaLibrary\HasMedia\Interfaces\HasMediaConversions;
 use InetStudio\SimpleCounters\Models\Traits\HasSimpleCountersTrait;
 use InetStudio\Ingredients\Contracts\Models\IngredientModelContract;
 use InetStudio\Favorites\Contracts\Models\Traits\FavoritableContract;
 
-class IngredientModel extends Model implements IngredientModelContract, MetableContract, HasMediaConversions, FavoritableContract, RateableContract
+class IngredientModel extends Model implements IngredientModelContract, MetableContract, HasMedia, FavoritableContract, RateableContract
 {
     use HasTags;
     use Metable;

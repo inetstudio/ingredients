@@ -15,6 +15,21 @@ use InetStudio\Ingredients\Contracts\Http\Controllers\Back\IngredientsUtilityCon
 class IngredientsUtilityController extends Controller implements IngredientsUtilityControllerContract
 {
     /**
+     * Используемые сервисы.
+     *
+     * @var array
+     */
+    public $services;
+
+    /**
+     * IngredientsUtilityController constructor.
+     */
+    public function __construct()
+    {
+        $this->services['ingredients'] = app()->make('InetStudio\Ingredients\Contracts\Services\Back\IngredientsServiceContract');
+    }
+
+    /**
      * Получаем slug для модели по строке.
      *
      * @param Request $request
@@ -23,8 +38,12 @@ class IngredientsUtilityController extends Controller implements IngredientsUtil
      */
     public function getSlug(Request $request): SlugResponseContract
     {
+        $id = (int) $request->get('id');
         $name = $request->get('name');
-        $slug = ($name) ? SlugService::createSlug(app()->make('InetStudio\Ingredients\Contracts\Models\IngredientModelContract'), 'slug', $name) : '';
+
+        $model = $this->services['ingredients']->getIngredientObject($id);
+
+        $slug = ($name) ? SlugService::createSlug($model, 'slug', $name) : '';
 
         return app()->makeWith('InetStudio\Ingredients\Contracts\Http\Responses\Back\Utility\SlugResponseContract', [
             'slug' => $slug,
@@ -43,8 +62,7 @@ class IngredientsUtilityController extends Controller implements IngredientsUtil
         $search = $request->get('q');
         $type = $request->get('type');
 
-        $data = app()->make('InetStudio\Ingredients\Contracts\Services\Back\IngredientsServiceContract')
-            ->getSuggestions($search, $type);
+        $data = $this->services['ingredients']->getSuggestions($search, $type);
 
         return app()->makeWith('InetStudio\Ingredients\Contracts\Http\Responses\Back\Utility\SuggestionsResponseContract', [
             'suggestions' => $data,

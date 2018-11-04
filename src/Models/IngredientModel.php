@@ -111,7 +111,7 @@ class IngredientModel extends Model implements IngredientModelContract, MetableC
      */
     public function setDescriptionAttribute($value)
     {
-        $this->attributes['description'] = trim(str_replace("&nbsp;", '', strip_tags((isset($value['text'])) ? $value['text'] : (! is_array($value) ? $value : ''))));
+        $this->attributes['description'] = trim(str_replace("&nbsp;", ' ', strip_tags((isset($value['text'])) ? $value['text'] : (! is_array($value) ? $value : ''))));
     }
 
     /**
@@ -228,6 +228,7 @@ class IngredientModel extends Model implements IngredientModelContract, MetableC
             'slug' => [
                 'source' => 'title',
                 'unique' => true,
+                'includeTrashed' => true,
             ],
         ];
     }

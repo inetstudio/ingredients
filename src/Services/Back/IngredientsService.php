@@ -58,13 +58,13 @@ class IngredientsService implements IngredientsServiceContract
      * Возвращаем объекты по списку id.
      *
      * @param array|int $ids
-     * @param bool $returnBuilder
+     * @param array $params
      *
      * @return mixed
      */
-    public function getIngredientsByIDs($ids, bool $returnBuilder = false)
+    public function getIngredientsByIDs($ids, array $params = [])
     {
-        return $this->repository->getItemsByIDs($ids, [], [], $returnBuilder);
+        return $this->repository->getItemsByIDs($ids, $params);
     }
 
     /**
@@ -150,12 +150,14 @@ class IngredientsService implements IngredientsServiceContract
      */
     public function getIngredientsStatisticByStatus()
     {
-        $articles = $this->repository->getAllItems([], ['status'], true)
+        $ingredients = $this->repository->getItemsQuery([
+                'relations' => ['status'],
+            ])
             ->select(['status_id', DB::raw('count(*) as total')])
             ->groupBy('status_id')
             ->get();
 
-        return $articles;
+        return $ingredients;
     }
 
     /**

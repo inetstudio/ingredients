@@ -41,74 +41,64 @@ class IngredientsService implements IngredientsServiceContract
      * Получаем объекты по id.
      *
      * @param $ids
-     * @param array $extColumns
-     * @param array $with
-     * @param bool $returnBuilder
+     * @param array $params
      *
      * @return mixed
      */
-    public function getIngredientsByIDs($ids, array $extColumns = [], array $with = [], bool $returnBuilder = false)
+    public function getIngredientsByIDs($ids, array $params = [])
     {
-        return $this->repository->getItemsByIDs($ids, $extColumns, $with, $returnBuilder);
+        return $this->repository->getItemsByIDs($ids, $params);
     }
 
     /**
      * Получаем объект по slug.
      *
      * @param string $slug
-     * @param array $extColumns
-     * @param array $with
-     * @param bool $returnBuilder
+     * @param array $params
      *
      * @return mixed
      */
-    public function getIngredientBySlug(string $slug, array $extColumns = [], array $with = [], bool $returnBuilder = false)
+    public function getIngredientBySlug(string $slug, array $params = [])
     {
-        return $this->repository->getItemBySlug($slug, $extColumns, $with, $returnBuilder);
+        return $this->repository->getItemBySlug($slug, $params);
     }
 
     /**
      * Получаем объекты по тегу.
      *
      * @param string $tagSlug
-     * @param array $extColumns
-     * @param array $with
-     * @param bool $returnBuilder
+     * @param array $params
      *
      * @return mixed
      */
-    public function getIngredientByTag(string $tagSlug, array $extColumns = [], array $with = [], bool $returnBuilder = false)
+    public function getIngredientsByTag(string $tagSlug, array $params = [])
     {
-        return $this->repository->getItemsByTag($tagSlug, $extColumns, $with, $returnBuilder);
+        return $this->repository->getItemsByTag($tagSlug, $params);
     }
 
     /**
      * Получаем сохраненные объекты пользователя.
      *
      * @param int $userID
-     * @param array $extColumns
-     * @param array $with
-     * @param bool $returnBuilder
+     * @param array $params
      *
      * @return mixed
      */
-    public function getIngredientsFavoritedByUser(int $userID, array $extColumns = [], array $with = [], bool $returnBuilder = false)
+    public function getIngredientsFavoritedByUser(int $userID, array $params = [])
     {
-        return $this->repository->getItemsFavoritedByUser($userID, $extColumns, $with, $returnBuilder);
+        return $this->repository->getItemsFavoritedByUser($userID, $params);
     }
 
     /**
      * Получаем все объекты.
      *
-     * @param array $extColumns
-     * @param array $with
-     * @param bool $returnBuilder
+     * @param array $params
      *
      * @return mixed
      */
-    public function getAllIngredients(array $extColumns = [], array $with = [], bool $returnBuilder = false)
+    public function getAllIngredients(array $params = [])
     {
-        return $this->repository->getAllItems($extColumns, $with, $returnBuilder);
+        return $this->repository->getAllItems($params);
     }
 
     /**
@@ -132,10 +122,15 @@ class IngredientsService implements IngredientsServiceContract
      */
     public function getFeedItems(): array
     {
-        $items = $this->repository->getAllItems([], [], true)
+        $items = $this->repository->getItemsQuery([
+                'columns' => ['title', 'description', 'content', 'publish_date'],
+                'order' => ['publish_date' => 'desc'],
+                'paging' => [
+                    'page' => 0,
+                    'limit' => 500,
+                ],
+            ])
             ->whereNotNull('publish_date')
-            ->orderBy('publish_date', 'desc')
-            ->limit(500)
             ->get();
 
         $resource = app()->make('InetStudio\Ingredients\Contracts\Transformers\Front\IngredientsFeedItemsTransformerContract')
@@ -156,7 +151,10 @@ class IngredientsService implements IngredientsServiceContract
      */
     public function getMindboxFeedItems()
     {
-        $items = $this->repository->getAllItems(['title', 'description', 'status_id'], ['media', 'categories', 'tags'], true)->get();
+        $items = $this->repository->getAllItems([
+            'columns' => ['title', 'description', 'status_id'],
+            'relations' => ['media', 'tags'],
+        ]);
 
         $resource = app()->make('InetStudio\Ingredients\Contracts\Transformers\Front\Feeds\Mindbox\IngredientTransformerContract')
             ->transformCollection($items);
@@ -176,7 +174,10 @@ class IngredientsService implements IngredientsServiceContract
      */
     public function getSiteMapItems(): array
     {
-        $items = $this->repository->getAllItems();
+        $items = $this->repository->getAllItems([
+            'columns' => ['created_at', 'updated_at'],
+            'order' => ['created_at' => 'desc'],
+        ]);
 
         $resource = app()->make('InetStudio\Ingredients\Contracts\Transformers\Front\IngredientsSiteMapTransformerContract')
             ->transformCollection($items);

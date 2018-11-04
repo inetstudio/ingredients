@@ -28,8 +28,7 @@
       "laravel": {
         "providers": [
           "InetStudio\\Ingredients\\Providers\\IngredientsBindingsServiceProvider",
-          "InetStudio\\Ingredients\\Providers\\IngredientsServiceProvider",
-          "InetStudio\\Ingredients\\Providers\\FormBuilderServiceProvider"
+          "InetStudio\\Ingredients\\Providers\\IngredientsServiceProvider"
         ]
       }
     }

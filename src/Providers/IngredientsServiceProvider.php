@@ -2,6 +2,7 @@
 
 namespace InetStudio\Ingredients\Providers;
 
+use Collective\Html\FormBuilder;
 use Illuminate\Support\ServiceProvider;
 
 /**
@@ -20,6 +21,7 @@ class IngredientsServiceProvider extends ServiceProvider
         $this->registerPublishes();
         $this->registerRoutes();
         $this->registerViews();
+        $this->registerFormComponents();
     }
 
     /**
@@ -80,5 +82,15 @@ class IngredientsServiceProvider extends ServiceProvider
     protected function registerViews(): void
     {
         $this->loadViewsFrom(__DIR__.'/../../resources/views', 'admin.module.ingredients');
+    }
+
+    /**
+     * Регистрация компонентов форм.
+     *
+     * @return void
+     */
+    protected function registerFormComponents()
+    {
+        FormBuilder::component('ingredients', 'admin.module.ingredients::back.forms.fields.ingredients', ['name' => null, 'value' => null, 'attributes' => null]);
     }
 }

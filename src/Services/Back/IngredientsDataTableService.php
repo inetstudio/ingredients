@@ -16,7 +16,7 @@ class IngredientsDataTableService extends DataTable implements IngredientsDataTa
     /**
      * @var IngredientsRepositoryContract
      */
-    private $repository;
+    public $repository;
 
     /**
      * IngredientsDataTableService constructor.
@@ -52,9 +52,10 @@ class IngredientsDataTableService extends DataTable implements IngredientsDataTa
      */
     public function query()
     {
-        $query = $this->repository->getAllItems([], [], true)
-            ->addSelect(['status_id', 'publish_date'])
-            ->with(['status']);
+        $query = $this->repository->getItemsQuery([
+            'columns' => ['status_id', 'created_at', 'updated_at', 'publish_date'],
+            'relations' => ['status'],
+        ]);
 
         return $query;
     }

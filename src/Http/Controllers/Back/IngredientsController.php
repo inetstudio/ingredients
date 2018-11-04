@@ -20,7 +20,7 @@ class IngredientsController extends Controller implements IngredientsControllerC
      *
      * @var array
      */
-    protected $services;
+    public $services;
 
     /**
      * IngredientsController constructor.
@@ -40,7 +40,7 @@ class IngredientsController extends Controller implements IngredientsControllerC
     {
         $table = $this->services['dataTables']->html();
 
-        return app()->makeWith('InetStudio\Ingredients\Contracts\Http\Responses\Back\Ingredients\IndexResponseContract', [
+        return app()->makeWith(IndexResponseContract::class, [
             'data' => compact('table'),
         ]);
     }
@@ -54,7 +54,7 @@ class IngredientsController extends Controller implements IngredientsControllerC
     {
         $item = $this->services['ingredients']->getIngredientObject();
 
-        return app()->makeWith('InetStudio\Ingredients\Contracts\Http\Responses\Back\Ingredients\FormResponseContract', [
+        return app()->makeWith(FormResponseContract::class, [
             'data' => compact('item'),
         ]);
     }
@@ -82,7 +82,7 @@ class IngredientsController extends Controller implements IngredientsControllerC
     {
         $item = $this->services['ingredients']->getIngredientObject($id);
 
-        return app()->makeWith('InetStudio\Ingredients\Contracts\Http\Responses\Back\Ingredients\FormResponseContract', [
+        return app()->makeWith(FormResponseContract::class, [
             'data' => compact('item'),
         ]);
     }
@@ -112,7 +112,7 @@ class IngredientsController extends Controller implements IngredientsControllerC
     {
         $item = $this->services['ingredients']->save($request, $id);
 
-        return app()->makeWith('InetStudio\Ingredients\Contracts\Http\Responses\Back\Ingredients\SaveResponseContract', [
+        return app()->makeWith(SaveResponseContract::class, [
             'item' => $item,
         ]);
     }
@@ -128,7 +128,7 @@ class IngredientsController extends Controller implements IngredientsControllerC
     {
         $result = $this->services['ingredients']->destroy($id);
 
-        return app()->makeWith('InetStudio\Ingredients\Contracts\Http\Responses\Back\Ingredients\DestroyResponseContract', [
+        return app()->makeWith(DestroyResponseContract::class, [
             'result' => ($result === null) ? false : $result,
         ]);
     }

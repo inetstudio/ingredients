@@ -79,12 +79,12 @@ class IngredientsService implements IngredientsServiceContract
     /**
      * Получаем сохраненные объекты пользователя.
      *
-     * @param int $userID
+     * @param mixed $userID
      * @param array $params
      *
      * @return mixed
      */
-    public function getIngredientsFavoritedByUser(int $userID, array $params = [])
+    public function getIngredientsFavoritedByUser($userID, array $params = [])
     {
         return $this->repository->getItemsFavoritedByUser($userID, $params);
     }

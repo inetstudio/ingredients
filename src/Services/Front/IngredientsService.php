@@ -35,10 +35,10 @@ class IngredientsService extends BaseService implements IngredientsServiceContra
      *
      * @return Collection
      */
-    public function getIngredientsByMaterials(Collection $materials): Collection
+    public function getItemsByMaterials(Collection $materials): Collection
     {
         return $materials->map(function ($item) {
-            return (method_exists($item, 'ingredients')) ? $item->ingredients : [];
+            return (isset($item['ingredients'])) ? $item['ingredients'] : [];
         })->filter()->collapse()->unique('id');
     }
 
@@ -61,29 +61,6 @@ class IngredientsService extends BaseService implements IngredientsServiceContra
             ->get();
 
         $resource = app()->make('InetStudio\Ingredients\Contracts\Transformers\Front\IngredientsFeedItemsTransformerContract')
-            ->transformCollection($items);
-
-        $manager = new Manager();
-        $manager->setSerializer(new DataArraySerializer());
-
-        $transformation = $manager->createData($resource)->toArray();
-
-        return $transformation['data'];
-    }
-
-    /**
-     * Получаем информацию по статьям для фида mindbox.
-     *
-     * @return mixed
-     */
-    public function getMindboxFeedItems()
-    {
-        $items = $this->repository->getAllItems([
-            'columns' => ['title', 'description', 'status_id'],
-            'relations' => ['media', 'tags'],
-        ]);
-
-        $resource = app()->make('InetStudio\Ingredients\Contracts\Transformers\Front\Feeds\Mindbox\IngredientTransformerContract')
             ->transformCollection($items);
 
         $manager = new Manager();

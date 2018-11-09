@@ -36,7 +36,6 @@ class IngredientsBindingsServiceProvider extends ServiceProvider
         'InetStudio\Ingredients\Contracts\Services\Front\IngredientsServiceContract' => 'InetStudio\Ingredients\Services\Front\IngredientsService',
         'InetStudio\Ingredients\Contracts\Transformers\Back\IngredientTransformerContract' => 'InetStudio\Ingredients\Transformers\Back\IngredientTransformer',
         'InetStudio\Ingredients\Contracts\Transformers\Back\SuggestionTransformerContract' => 'InetStudio\Ingredients\Transformers\Back\SuggestionTransformer',
-        'InetStudio\Ingredients\Contracts\Transformers\Front\Feeds\Mindbox\IngredientTransformerContract' => 'InetStudio\Ingredients\Transformers\Front\Feeds\Mindbox\IngredientTransformer',
         'InetStudio\Ingredients\Contracts\Transformers\Front\IngredientsFeedItemsTransformerContract' => 'InetStudio\Ingredients\Transformers\Front\IngredientsFeedItemsTransformer',
         'InetStudio\Ingredients\Contracts\Transformers\Front\IngredientsSiteMapTransformerContract' => 'InetStudio\Ingredients\Transformers\Front\IngredientsSiteMapTransformer',
     ];

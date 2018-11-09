@@ -5,100 +5,27 @@ namespace InetStudio\Ingredients\Services\Front;
 use League\Fractal\Manager;
 use Illuminate\Support\Collection;
 use League\Fractal\Serializer\DataArraySerializer;
+use InetStudio\AdminPanel\Services\Front\BaseService;
+use InetStudio\Tags\Services\Front\Traits\TagsServiceTrait;
+use InetStudio\AdminPanel\Services\Front\Traits\SlugsServiceTrait;
+use InetStudio\Favorites\Services\Front\Traits\FavoritesServiceTrait;
 use InetStudio\Ingredients\Contracts\Services\Front\IngredientsServiceContract;
 
 /**
  * Class IngredientsService.
  */
-class IngredientsService implements IngredientsServiceContract
+class IngredientsService extends BaseService implements IngredientsServiceContract
 {
-    /**
-     * @var
-     */
-    public $repository;
+    use TagsServiceTrait;
+    use SlugsServiceTrait;
+    use FavoritesServiceTrait;
 
     /**
      * IngredientsService constructor.
      */
     public function __construct()
     {
-        $this->repository = app()->make('InetStudio\Ingredients\Contracts\Repositories\IngredientsRepositoryContract');
-    }
-
-    /**
-     * Получаем объект по id.
-     *
-     * @param int $id
-     *
-     * @return mixed
-     */
-    public function getIngredientById(int $id = 0)
-    {
-        return $this->repository->getItemByID($id);
-    }
-
-    /**
-     * Получаем объекты по id.
-     *
-     * @param $ids
-     * @param array $params
-     *
-     * @return mixed
-     */
-    public function getIngredientsByIDs($ids, array $params = [])
-    {
-        return $this->repository->getItemsByIDs($ids, $params);
-    }
-
-    /**
-     * Получаем объект по slug.
-     *
-     * @param string $slug
-     * @param array $params
-     *
-     * @return mixed
-     */
-    public function getIngredientBySlug(string $slug, array $params = [])
-    {
-        return $this->repository->getItemBySlug($slug, $params);
-    }
-
-    /**
-     * Получаем объекты по тегу.
-     *
-     * @param string $tagSlug
-     * @param array $params
-     *
-     * @return mixed
-     */
-    public function getIngredientsByTag(string $tagSlug, array $params = [])
-    {
-        return $this->repository->getItemsByTag($tagSlug, $params);
-    }
-
-    /**
-     * Получаем сохраненные объекты пользователя.
-     *
-     * @param mixed $userID
-     * @param array $params
-     *
-     * @return mixed
-     */
-    public function getIngredientsFavoritedByUser($userID, array $params = [])
-    {
-        return $this->repository->getItemsFavoritedByUser($userID, $params);
-    }
-
-    /**
-     * Получаем все объекты.
-     *
-     * @param array $params
-     *
-     * @return mixed
-     */
-    public function getAllIngredients(array $params = [])
-    {
-        return $this->repository->getAllItems($params);
+        parent::__construct(app()->make('InetStudio\Ingredients\Contracts\Repositories\IngredientsRepositoryContract'));
     }
 
     /**

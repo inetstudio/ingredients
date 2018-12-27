@@ -16,6 +16,6 @@
         'data-source' => route('back.ingredients.getSuggestions'),
     ],
     'options' => [
-        'values' => (old('ingredients')) ? $ingredientsService->getIngredientsByIDs(old('ingredients'), true)->pluck('title', 'id')->toArray() : $item->ingredients()->pluck('title', 'id')->toArray(),
+        'values' => (old('ingredients')) ? $ingredientsService->getIngredientsByIDs(old('ingredients'))->pluck('title', 'id')->toArray() : $item->ingredients()->pluck('title', 'id')->toArray(),
     ],
 ]) !!}

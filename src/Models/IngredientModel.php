@@ -3,9 +3,11 @@
 namespace InetStudio\Ingredients\Models;
 
 use Cocur\Slugify\Slugify;
+use Illuminate\Support\Arr;
 use Laravel\Scout\Searchable;
 use Illuminate\Support\Carbon;
 use Illuminate\Database\Eloquent\Model;
+use OwenIt\Auditing\Contracts\Auditable;
 use Cviebrock\EloquentSluggable\Sluggable;
 use InetStudio\Meta\Models\Traits\Metable;
 use InetStudio\Tags\Models\Traits\HasTags;
@@ -15,7 +17,6 @@ use InetStudio\Rating\Models\Traits\Rateable;
 use InetStudio\Statuses\Models\Traits\Status;
 use InetStudio\Uploads\Models\Traits\HasImages;
 use InetStudio\Widgets\Models\Traits\HasWidgets;
-use Venturecraft\Revisionable\RevisionableTrait;
 use InetStudio\Comments\Models\Traits\HasComments;
 use InetStudio\Products\Models\Traits\HasProducts;
 use InetStudio\Favorites\Models\Traits\Favoritable;
@@ -27,7 +28,7 @@ use InetStudio\SimpleCounters\Models\Traits\HasSimpleCountersTrait;
 use InetStudio\Ingredients\Contracts\Models\IngredientModelContract;
 use InetStudio\Favorites\Contracts\Models\Traits\FavoritableContract;
 
-class IngredientModel extends Model implements IngredientModelContract, MetableContract, HasMedia, FavoritableContract, RateableContract
+class IngredientModel extends Model implements IngredientModelContract, MetableContract, HasMedia, FavoritableContract, RateableContract, Auditable
 {
     use HasTags;
     use Metable;
@@ -41,7 +42,7 @@ class IngredientModel extends Model implements IngredientModelContract, MetableC
     use HasProducts;
     use SoftDeletes;
     use HasClassifiers;
-    use RevisionableTrait;
+    use \OwenIt\Auditing\Auditable;
     use SluggableScopeHelpers;
     use HasSimpleCountersTrait;
 
@@ -82,7 +83,12 @@ class IngredientModel extends Model implements IngredientModelContract, MetableC
         'publish_date',
     ];
 
-    protected $revisionCreationsEnabled = true;
+    /**
+     * Should the timestamps be audited?
+     *
+     * @var bool
+     */
+    protected $auditTimestamps = true;
 
     /**
      * Сеттер атрибута title.
@@ -204,14 +210,14 @@ class IngredientModel extends Model implements IngredientModelContract, MetableC
      */
     public function toSearchableArray()
     {
-        $arr = array_only($this->toArray(), ['id', 'title', 'description', 'content']);
+        $arr = Arr::only($this->toArray(), ['id', 'title', 'description', 'content']);
 
         $arr['tags'] = $this->tags->map(function ($item) {
-            return array_only($item->toSearchableArray(), ['id', 'name']);
+            return Arr::only($item->toSearchableArray(), ['id', 'name']);
         })->toArray();
 
         $arr['products'] = $this->products->map(function ($item) {
-            return array_only($item->toSearchableArray(), ['id', 'title']);
+            return Arr::only($item->toSearchableArray(), ['id', 'title']);
         })->toArray();
 
         return $arr;

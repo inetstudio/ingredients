@@ -46,7 +46,7 @@ class IngredientsController extends Controller implements IngredientsControllerC
     }
 
     /**
-     * Добавление объекта.
+     * Создание объекта.
      *
      * @return FormResponseContract
      */

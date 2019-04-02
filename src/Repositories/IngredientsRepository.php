@@ -60,7 +60,7 @@ class IngredientsRepository extends BaseRepository implements IngredientsReposit
             },
 
             'status' => function ($query) {
-                $query->select(['id', 'name', 'alias']);
+                $query->select(['id', 'name', 'alias', 'color_class']);
             },
         ];
     }

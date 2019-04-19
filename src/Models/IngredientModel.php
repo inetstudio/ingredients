@@ -10,7 +10,7 @@ use Illuminate\Database\Eloquent\Model;
 use OwenIt\Auditing\Contracts\Auditable;
 use Cviebrock\EloquentSluggable\Sluggable;
 use InetStudio\Meta\Models\Traits\Metable;
-use InetStudio\Tags\Models\Traits\HasTags;
+use InetStudio\TagsPackage\Tags\Models\Traits\HasTags;
 use Spatie\MediaLibrary\HasMedia\HasMedia;
 use Illuminate\Database\Eloquent\SoftDeletes;
 use InetStudio\Rating\Models\Traits\Rateable;

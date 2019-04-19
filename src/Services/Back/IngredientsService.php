@@ -34,7 +34,7 @@ class IngredientsService implements IngredientsServiceContract
     {
         $this->services['meta'] = app()->make('InetStudio\Meta\Contracts\Services\Back\MetaServiceContract');
         $this->services['uploads'] = app()->make('InetStudio\Uploads\Contracts\Services\Back\ImagesServiceContract');
-        $this->services['tags'] = app()->make('InetStudio\Tags\Contracts\Services\Back\TagsServiceContract');
+        $this->services['tags'] = app()->make('InetStudio\TagsPackage\Tags\Contracts\Services\Back\ItemsServiceContract');
         $this->services['classifiers'] = app()->make('InetStudio\Classifiers\Entries\Contracts\Services\Back\ItemsServiceContract');
         $this->services['products'] = app()->make('InetStudio\Products\Contracts\Services\Back\ProductsServiceContract');
         $this->services['widgets'] = app()->make('InetStudio\Widgets\Contracts\Services\Back\WidgetsServiceContract');

@@ -20,12 +20,15 @@ class IngredientsService extends BaseService implements IngredientsServiceContra
     use SlugsServiceTrait;
     use FavoritesServiceTrait;
 
+    public $model;
+
     /**
      * IngredientsService constructor.
      */
     public function __construct()
     {
         parent::__construct(app()->make('InetStudio\Ingredients\Contracts\Repositories\IngredientsRepositoryContract'));
+        $this->model = app()->make('InetStudio\Ingredients\Contracts\Models\IngredientModelContract');
     }
 
     /**

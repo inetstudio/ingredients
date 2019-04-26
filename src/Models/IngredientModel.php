@@ -3,6 +3,7 @@
 namespace InetStudio\Ingredients\Models;
 
 use Cocur\Slugify\Slugify;
+use Illuminate\Database\Eloquent\Relations\MorphMany;
 use Illuminate\Support\Arr;
 use Laravel\Scout\Searchable;
 use Illuminate\Support\Carbon;
@@ -27,6 +28,7 @@ use InetStudio\Rating\Contracts\Models\Traits\RateableContract;
 use InetStudio\SimpleCounters\Models\Traits\HasSimpleCountersTrait;
 use InetStudio\Ingredients\Contracts\Models\IngredientModelContract;
 use InetStudio\Favorites\Contracts\Models\Traits\FavoritableContract;
+use InetStudio\AdminPanel\Base\Models\Traits\Scopes\BuildQueryScopeTrait;
 
 class IngredientModel extends Model implements IngredientModelContract, MetableContract, HasMedia, FavoritableContract, RateableContract, Auditable
 {
@@ -42,6 +44,7 @@ class IngredientModel extends Model implements IngredientModelContract, MetableC
     use HasProducts;
     use SoftDeletes;
     use HasClassifiers;
+    use BuildQueryScopeTrait;
     use \OwenIt\Auditing\Auditable;
     use SluggableScopeHelpers;
     use HasSimpleCountersTrait;
@@ -89,6 +92,51 @@ class IngredientModel extends Model implements IngredientModelContract, MetableC
      * @var bool
      */
     protected $auditTimestamps = true;
+
+    /**
+     * Загрузка модели.
+     */
+    protected static function boot()
+    {
+        parent::boot();
+
+        self::$buildQueryScopeDefaults['columns'] = [
+            'id',
+            'slug',
+            'title',
+        ];
+
+        self::$buildQueryScopeDefaults['relations'] = [
+            'meta' => function ($query) {
+                $query->select(['metable_id', 'metable_type', 'key', 'value']);
+            },
+
+            'media' => function ($query) {
+                $query->select(['id', 'model_id', 'model_type', 'collection_name', 'file_name', 'disk', 'mime_type', 'custom_properties', 'responsive_images']);
+            },
+
+            'tags' => function ($query) {
+                $query->select(['id', 'name', 'slug']);
+            },
+
+            'counters' => function ($query) {
+                $query->select(['countable_id', 'countable_type', 'type', 'counter']);
+            },
+
+            'products' => function ($query) {
+                $query->select(['id', 'title', 'brand'])
+                    ->with(['media' => function ($query) {
+                        $query->select(['id', 'model_id', 'model_type', 'collection_name', 'file_name', 'disk']);
+                    }, 'links' => function ($linksQuery) {
+                        $linksQuery->select(['id', 'product_id', 'link']);
+                    }]);
+            },
+
+            'status' => function ($query) {
+                $query->select(['id', 'name', 'alias', 'color_class']);
+            },
+        ];
+    }
 
     /**
      * Сеттер атрибута title.

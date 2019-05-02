@@ -7,7 +7,7 @@ use Illuminate\Support\Collection;
 use League\Fractal\Serializer\DataArraySerializer;
 use InetStudio\AdminPanel\Services\Front\BaseService;
 use InetStudio\TagsPackage\Tags\Services\Front\Traits\TagsServiceTrait;
-use InetStudio\AdminPanel\Services\Front\Traits\SlugsServiceTrait;
+use InetStudio\AdminPanel\Base\Services\Traits\SlugsServiceTrait;
 use InetStudio\Favorites\Services\Front\Traits\FavoritesServiceTrait;
 use InetStudio\Ingredients\Contracts\Services\Front\IngredientsServiceContract;
 

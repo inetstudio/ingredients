@@ -10,7 +10,6 @@ use Illuminate\Support\Carbon;
 use Illuminate\Database\Eloquent\Model;
 use OwenIt\Auditing\Contracts\Auditable;
 use Cviebrock\EloquentSluggable\Sluggable;
-use InetStudio\Meta\Models\Traits\Metable;
 use InetStudio\TagsPackage\Tags\Models\Traits\HasTags;
 use Spatie\MediaLibrary\HasMedia\HasMedia;
 use Illuminate\Database\Eloquent\SoftDeletes;
@@ -21,19 +20,19 @@ use InetStudio\Widgets\Models\Traits\HasWidgets;
 use InetStudio\Comments\Models\Traits\HasComments;
 use InetStudio\Products\Models\Traits\HasProducts;
 use InetStudio\Favorites\Models\Traits\Favoritable;
+use InetStudio\MetaPackage\Meta\Models\Traits\HasMeta;
 use Cviebrock\EloquentSluggable\SluggableScopeHelpers;
 use InetStudio\Classifiers\Models\Traits\HasClassifiers;
-use InetStudio\Meta\Contracts\Models\Traits\MetableContract;
 use InetStudio\Rating\Contracts\Models\Traits\RateableContract;
 use InetStudio\SimpleCounters\Models\Traits\HasSimpleCountersTrait;
 use InetStudio\Ingredients\Contracts\Models\IngredientModelContract;
 use InetStudio\Favorites\Contracts\Models\Traits\FavoritableContract;
 use InetStudio\AdminPanel\Base\Models\Traits\Scopes\BuildQueryScopeTrait;
 
-class IngredientModel extends Model implements IngredientModelContract, MetableContract, HasMedia, FavoritableContract, RateableContract, Auditable
+class IngredientModel extends Model implements IngredientModelContract, HasMedia, FavoritableContract, RateableContract, Auditable
 {
     use HasTags;
-    use Metable;
+    use HasMeta;
     use Rateable;
     use Sluggable;
     use HasImages;

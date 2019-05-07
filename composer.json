@@ -14,6 +14,7 @@
       "inetstudio/comments": "1.8.*",
       "inetstudio/persons": "1.8.*",
       "inetstudio/favorites": "1.8.*",
+      "inetstudio/meta": "1.8.*",
       "inetstudio/polls": "1.8.*",
       "inetstudio/products": "1.8.*",
       "inetstudio/rating": "1.8.*",

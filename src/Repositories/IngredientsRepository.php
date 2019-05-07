@@ -3,7 +3,6 @@
 namespace InetStudio\Ingredients\Repositories;
 
 use InetStudio\AdminPanel\Repositories\BaseRepository;
-use InetStudio\AdminPanel\Repositories\Traits\SlugsRepositoryTrait;
 use InetStudio\Ingredients\Contracts\Models\IngredientModelContract;
 use InetStudio\Favorites\Repositories\Traits\FavoritesRepositoryTrait;
 use InetStudio\Ingredients\Contracts\Repositories\IngredientsRepositoryContract;
@@ -13,7 +12,6 @@ use InetStudio\Ingredients\Contracts\Repositories\IngredientsRepositoryContract;
  */
 class IngredientsRepository extends BaseRepository implements IngredientsRepositoryContract
 {
-    use SlugsRepositoryTrait;
     use FavoritesRepositoryTrait;
 
     /**

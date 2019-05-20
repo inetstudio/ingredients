@@ -2,8 +2,8 @@
 
 namespace InetStudio\IngredientsPackage\Ingredients\Contracts\Transformers\Front\Sitemap;
 
-use InetStudio\IngredientsPackage\Ingredients\Contracts\Models\IngredientModelContract;
 use League\Fractal\Resource\Collection as FractalCollection;
+use InetStudio\IngredientsPackage\Ingredients\Contracts\Models\IngredientModelContract;
 
 /**
  * Interface ItemTransformerContract.

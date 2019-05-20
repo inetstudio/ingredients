@@ -14,8 +14,8 @@ use InetStudio\Uploads\Models\Traits\HasImages;
 use InetStudio\Widgets\Models\Traits\HasWidgets;
 use InetStudio\Comments\Models\Traits\HasComments;
 use InetStudio\Favorites\Models\Traits\Favoritable;
-use InetStudio\TagsPackage\Tags\Models\Traits\HasTags;
 use InetStudio\MetaPackage\Meta\Models\Traits\HasMeta;
+use InetStudio\TagsPackage\Tags\Models\Traits\HasTags;
 use InetStudio\Classifiers\Models\Traits\HasClassifiers;
 use InetStudio\AdminPanel\Base\Models\Traits\SluggableTrait;
 use InetStudio\StatusesPackage\Statuses\Models\Traits\Status;
@@ -103,7 +103,6 @@ class IngredientModel extends Model implements IngredientModelContract
         'publish_date',
     ];
 
-
     /**
      * Настройка полей для поиска.
      *
@@ -173,7 +172,7 @@ class IngredientModel extends Model implements IngredientModelContract
                         'disk',
                         'mime_type',
                         'custom_properties',
-                        'responsive_images'
+                        'responsive_images',
                     ]
                 );
             },
@@ -197,7 +196,7 @@ class IngredientModel extends Model implements IngredientModelContract
                             },
                             'links' => function ($linksQuery) {
                                 $linksQuery->select(['id', 'product_id', 'link']);
-                            }
+                            },
                         ]
                     );
             },

@@ -85,9 +85,11 @@ class ItemsService extends BaseService implements ItemsServiceContract
      */
     public function getIngredientsStatisticByStatus()
     {
-        $ingredients = $this->model::buildQuery([
-                'relations' => ['status'],
-            ])
+        $ingredients = $this->model::buildQuery(
+                [
+                    'relations' => ['status'],
+                ]
+            )
             ->select(['status_id', DB::raw('count(*) as total')])
             ->groupBy('status_id')
             ->get();

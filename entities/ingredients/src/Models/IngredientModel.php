@@ -112,13 +112,13 @@ class IngredientModel extends Model implements IngredientModelContract
     {
         $arr = Arr::only($this->toArray(), ['id', 'title', 'description', 'content']);
 
-        $arr['tags'] = $this['tags']->map(
+        $arr['tags'] = collect($this['tags'])->map(
             function ($item) {
                 return Arr::only($item->toSearchableArray(), ['id', 'name']);
             }
         )->toArray();
 
-        $arr['products'] = $this['products']->map(
+        $arr['products'] = collect($this['products'])->map(
             function ($item) {
                 return Arr::only($item->toSearchableArray(), ['id', 'title']);
             }

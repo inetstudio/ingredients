@@ -33,7 +33,6 @@ class BindingsServiceProvider extends BaseServiceProvider implements DeferrableP
         'InetStudio\IngredientsPackage\Ingredients\Contracts\Services\Front\SitemapServiceContract' => 'InetStudio\IngredientsPackage\Ingredients\Services\Front\SitemapService',
         'InetStudio\IngredientsPackage\Ingredients\Contracts\Transformers\Back\Resource\IndexTransformerContract' => 'InetStudio\IngredientsPackage\Ingredients\Transformers\Back\Resource\IndexTransformer',
         'InetStudio\IngredientsPackage\Ingredients\Contracts\Transformers\Back\Utility\SuggestionTransformerContract' => 'InetStudio\IngredientsPackage\Ingredients\Transformers\Back\Utility\SuggestionTransformer',
-        'InetStudio\IngredientsPackage\Ingredients\Contracts\Transformers\Front\IngredientsFeedItemsTransformerContract' => 'InetStudio\IngredientsPackage\Ingredients\Transformers\Front\IngredientsFeedItemsTransformer',
         'InetStudio\IngredientsPackage\Ingredients\Contracts\Transformers\Front\Sitemap\ItemTransformerContract' => 'InetStudio\IngredientsPackage\Ingredients\Transformers\Front\Sitemap\ItemTransformer',
     ];
 

@@ -112,13 +112,13 @@ class IngredientModel extends Model implements IngredientModelContract
     {
         $arr = Arr::only($this->toArray(), ['id', 'title', 'description', 'content']);
 
-        $arr['tags'] = $this->tags->map(
+        $arr['tags'] = $this['tags']->map(
             function ($item) {
                 return Arr::only($item->toSearchableArray(), ['id', 'name']);
             }
         )->toArray();
 
-        $arr['products'] = $this->products->map(
+        $arr['products'] = $this['products']->map(
             function ($item) {
                 return Arr::only($item->toSearchableArray(), ['id', 'title']);
             }
@@ -310,7 +310,7 @@ class IngredientModel extends Model implements IngredientModelContract
      */
     public function getHrefAttribute()
     {
-        return url($this->material_type.'/'.(! empty($this->slug) ? $this->slug : $this->id));
+        return url($this['material_type'].'/'.(! empty($this['slug']) ? $this['slug'] : $this['id']));
     }
 
     /**

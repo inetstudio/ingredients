@@ -1,36 +1,38 @@
 {
-    "name": "inetstudio/ingredients",
-    "description": "Package for ingredients materials",
-    "homepage": "https://github.com/inetstudio/ingredients",
-    "license": "MIT",
-    "authors": [
-      {
-        "name": "Konstantin Bukin",
-        "email": "bukin@inetstudio.ru"
-      }
-    ],
-    "require": {
-      "inetstudio/classifiers": "1.8.*",
-      "inetstudio/comments": "1.8.*",
-      "inetstudio/persons": "1.8.*",
-      "inetstudio/favorites": "1.8.*",
-      "inetstudio/meta": "1.8.*",
-      "inetstudio/polls": "1.8.*",
-      "inetstudio/products": "1.8.*",
-      "inetstudio/rating": "1.8.*",
-      "inetstudio/widgets": "1.8.*"
-    },
-    "autoload": {
-      "psr-4": {
-        "InetStudio\\Ingredients\\": "src/"
-      }
-    },
-    "extra": {
-      "laravel": {
-        "providers": [
-          "InetStudio\\Ingredients\\Providers\\IngredientsBindingsServiceProvider",
-          "InetStudio\\Ingredients\\Providers\\IngredientsServiceProvider"
-        ]
-      }
+  "name": "inetstudio/ingredients",
+  "description": "Package for ingredients materials",
+  "homepage": "https://github.com/inetstudio/ingredients",
+  "license": "MIT",
+  "authors": [
+    {
+      "name": "Konstantin Bukin",
+      "email": "bukin@inetstudio.ru"
     }
+  ],
+  "require": {
+    "inetstudio/admin-panel": "1.8.*",
+    "inetstudio/classifiers": "1.8.*",
+    "inetstudio/comments": "1.8.*",
+    "inetstudio/favorites": "1.8.*",
+    "inetstudio/meta": "1.8.*",
+    "inetstudio/rating": "1.8.*",
+    "inetstudio/tags": "1.8.*",
+    "inetstudio/statuses": "1.8.*",
+    "inetstudio/widgets": "1.8.*"
+  },
+  "autoload": {
+    "psr-4": {
+      "InetStudio\\IngredientsPackage\\": "package/src",
+      "InetStudio\\IngredientsPackage\\Ingredients\\": "entities/ingredients/src"
+    }
+  },
+  "extra": {
+    "laravel": {
+      "providers": [
+        "InetStudio\\IngredientsPackage\\Providers\\ServiceProvider",
+        "InetStudio\\IngredientsPackage\\Ingredients\\Providers\\BindingsServiceProvider",
+        "InetStudio\\IngredientsPackage\\Ingredients\\Providers\\ServiceProvider"
+      ]
+    }
+  }
 }

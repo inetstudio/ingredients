@@ -118,12 +118,6 @@ class IngredientModel extends Model implements IngredientModelContract
             }
         )->toArray();
 
-        $arr['products'] = collect($this['products'])->map(
-            function ($item) {
-                return Arr::only($item->toSearchableArray(), ['id', 'title']);
-            }
-        )->toArray();
-
         return $arr;
     }
 
@@ -183,22 +177,6 @@ class IngredientModel extends Model implements IngredientModelContract
 
             'counters' => function ($query) {
                 $query->select(['countable_id', 'countable_type', 'type', 'counter']);
-            },
-
-            'products' => function ($query) {
-                $query->select(['id', 'title', 'brand'])
-                    ->with(
-                        [
-                            'media' => function ($query) {
-                                $query->select(
-                                    ['id', 'model_id', 'model_type', 'collection_name', 'file_name', 'disk']
-                                );
-                            },
-                            'links' => function ($linksQuery) {
-                                $linksQuery->select(['id', 'product_id', 'link']);
-                            },
-                        ]
-                    );
             },
 
             'status' => function ($query) {

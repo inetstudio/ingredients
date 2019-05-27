@@ -38,7 +38,7 @@ class SuggestionTransformer extends TransformerAbstract implements SuggestionTra
     {
         return ($this->type == 'autocomplete')
             ? [
-                'value' => $item['name'],
+                'value' => $item['title'],
                 'data' => [
                     'id' => $item['id'],
                     'type' => get_class($item),

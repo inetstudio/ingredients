@@ -9,7 +9,7 @@
         'title' => 'Ингредиенты',
     ],
     'field' => [
-        'class' => 'select2 form-control',
+        'class' => 'select2-drop form-control',
         'data-placeholder' => 'Выберите ингредиенты',
         'style' => 'width: 100%',
         'multiple' => 'multiple',

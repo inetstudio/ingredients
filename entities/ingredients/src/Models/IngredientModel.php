@@ -12,13 +12,13 @@ use Illuminate\Database\Eloquent\SoftDeletes;
 use InetStudio\Rating\Models\Traits\Rateable;
 use InetStudio\Uploads\Models\Traits\HasImages;
 use InetStudio\Widgets\Models\Traits\HasWidgets;
-use InetStudio\Comments\Models\Traits\HasComments;
 use InetStudio\Favorites\Models\Traits\Favoritable;
 use InetStudio\MetaPackage\Meta\Models\Traits\HasMeta;
 use InetStudio\TagsPackage\Tags\Models\Traits\HasTags;
 use InetStudio\Classifiers\Models\Traits\HasClassifiers;
 use InetStudio\AdminPanel\Base\Models\Traits\SluggableTrait;
 use InetStudio\StatusesPackage\Statuses\Models\Traits\Status;
+use InetStudio\CommentsPackage\Comments\Models\Traits\HasComments;
 use InetStudio\AdminPanel\Base\Models\Traits\Scopes\BuildQueryScopeTrait;
 use InetStudio\IngredientsPackage\Ingredients\Contracts\Models\IngredientModelContract;
 

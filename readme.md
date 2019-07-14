@@ -1,28 +1,42 @@
 # Elasticsearch
 
 ````
-PUT app_index
-PUT app_index/_mapping/ingredients
+curl -X PUT "localhost:9200/app_index_ingredients" -H 'Content-Type: application/json' -d'
 {
-  "properties": {
-    "id": {
-      "type": "integer"
-  	},
-    "title": {
-  	  "type": "string"
-    },
-	  "description": {
-  	  "type": "text"
-  	},  
-	 "content": {
-  	  "type": "text"
-  	 },	
-    "tags": {
-      "type": "nested"
-    },
-    "products": {
-      "type": "nested"
-    }
-  }
+   "mappings":{
+      "properties":{
+          "type": {
+             "type":"keyword"
+          },
+          "id":{
+             "type":"integer"
+          },
+          "is_published": {
+             "type":"boolean"
+          },       
+          "classifiers": {
+          	"type":"integer"
+          }, 
+          "title":{
+             "type":"text"
+          },
+          "description":{
+             "type":"text"
+          },
+          "content":{
+             "type":"text"
+          },
+          "publish_date": {
+             "type":"date"
+          },
+          "tags":{
+             "type":"nested"
+          },
+          "products":{
+             "type":"nested"
+          }
+       }
+   }
 }
+'
 ````

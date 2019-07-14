@@ -122,6 +122,16 @@ class IngredientModel extends Model implements IngredientModelContract
     }
 
     /**
+     * Get the index name for the model.
+     *
+     * @return string
+     */
+    public function searchableIndex()
+    {
+        return trim(config('scout.elasticsearch.index', '').'_ingredients', '_');
+    }
+
+    /**
      * Get the _type name for the model.
      *
      * @return string

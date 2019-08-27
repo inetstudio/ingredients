@@ -3,7 +3,7 @@
 namespace InetStudio\IngredientsPackage\Ingredients\Transformers\Front\Sitemap;
 
 use Carbon\Carbon;
-use League\Fractal\TransformerAbstract;
+use InetStudio\AdminPanel\Base\Transformers\BaseTransformer;
 use League\Fractal\Resource\Collection as FractalCollection;
 use InetStudio\IngredientsPackage\Ingredients\Contracts\Models\IngredientModelContract;
 use InetStudio\IngredientsPackage\Ingredients\Contracts\Transformers\Front\Sitemap\ItemTransformerContract;
@@ -11,7 +11,7 @@ use InetStudio\IngredientsPackage\Ingredients\Contracts\Transformers\Front\Sitem
 /**
  * Class ItemTransformer.
  */
-class ItemTransformer extends TransformerAbstract implements ItemTransformerContract
+class ItemTransformer extends BaseTransformer implements ItemTransformerContract
 {
     /**
      * Трансформация данных.

@@ -152,7 +152,6 @@ class IngredientModel extends Model implements IngredientModelContract
             'slug' => [
                 'source' => 'title',
                 'unique' => true,
-                'includeTrashed' => true,
             ],
         ];
     }

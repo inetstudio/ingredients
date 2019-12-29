@@ -23,6 +23,7 @@ class BindingsServiceProvider extends BaseServiceProvider implements DeferrableP
         'InetStudio\IngredientsPackage\Ingredients\Contracts\Http\Responses\Back\Resource\FormResponseContract' => 'InetStudio\IngredientsPackage\Ingredients\Http\Responses\Back\Resource\FormResponse',
         'InetStudio\IngredientsPackage\Ingredients\Contracts\Http\Responses\Back\Resource\IndexResponseContract' => 'InetStudio\IngredientsPackage\Ingredients\Http\Responses\Back\Resource\IndexResponse',
         'InetStudio\IngredientsPackage\Ingredients\Contracts\Http\Responses\Back\Resource\SaveResponseContract' => 'InetStudio\IngredientsPackage\Ingredients\Http\Responses\Back\Resource\SaveResponse',
+        'InetStudio\IngredientsPackage\Ingredients\Contracts\Http\Responses\Back\Resource\ShowResponseContract' => 'InetStudio\IngredientsPackage\Ingredients\Http\Responses\Back\Resource\ShowResponse',
         'InetStudio\IngredientsPackage\Ingredients\Contracts\Http\Responses\Back\Utility\SlugResponseContract' => 'InetStudio\IngredientsPackage\Ingredients\Http\Responses\Back\Utility\SlugResponse',
         'InetStudio\IngredientsPackage\Ingredients\Contracts\Http\Responses\Back\Utility\SuggestionsResponseContract' => 'InetStudio\IngredientsPackage\Ingredients\Http\Responses\Back\Utility\SuggestionsResponse',
         'InetStudio\IngredientsPackage\Ingredients\Contracts\Models\IngredientModelContract' => 'InetStudio\IngredientsPackage\Ingredients\Models\IngredientModel',

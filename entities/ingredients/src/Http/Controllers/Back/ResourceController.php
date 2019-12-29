@@ -7,6 +7,7 @@ use Illuminate\Contracts\Container\BindingResolutionException;
 use InetStudio\IngredientsPackage\Ingredients\Contracts\Services\Back\ItemsServiceContract;
 use InetStudio\IngredientsPackage\Ingredients\Contracts\Services\Back\DataTableServiceContract;
 use InetStudio\IngredientsPackage\Ingredients\Contracts\Http\Requests\Back\SaveItemRequestContract;
+use InetStudio\IngredientsPackage\Ingredients\Contracts\Http\Responses\Back\Resource\ShowResponseContract;
 use InetStudio\IngredientsPackage\Ingredients\Contracts\Http\Controllers\Back\ResourceControllerContract;
 use InetStudio\IngredientsPackage\Ingredients\Contracts\Http\Responses\Back\Resource\FormResponseContract;
 use InetStudio\IngredientsPackage\Ingredients\Contracts\Http\Responses\Back\Resource\SaveResponseContract;
@@ -35,6 +36,26 @@ class ResourceController extends Controller implements ResourceControllerContrac
             IndexResponseContract::class,
             [
                 'data' => compact('table'),
+            ]
+        );
+    }
+
+    /**
+     * Получение объекта.
+     *
+     * @param  ItemsServiceContract  $resourceService
+     * @param  int  $id
+     *
+     * @return ShowResponseContract
+     */
+    public function show(ItemsServiceContract $resourceService, int $id = 0): ShowResponseContract
+    {
+        $item = $resourceService->getItemById($id);
+
+        return app()->makeWith(
+            ShowResponseContract::class,
+            [
+                'item' => $item,
             ]
         );
     }

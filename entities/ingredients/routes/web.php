@@ -22,9 +22,6 @@ Route::group(
             'ingredients',
             'ResourceControllerContract',
             [
-                'except' => [
-                    'show',
-                ],
                 'as' => 'back',
             ]
         );

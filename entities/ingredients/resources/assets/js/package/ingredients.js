@@ -1,12 +1,14 @@
 let ingredients = {};
 
 ingredients.init = function() {
-  $('#choose_ingredient_modal').on('hidden.bs.modal', function(e) {
-    let modal = $(this);
-
-    modal.find('.choose-data').val('');
-    modal.find('input[name=ingredient]').val('');
-  });
+  if (!window.Admin.vue.modulesComponents.modules.hasOwnProperty('ingredients-package')) {
+    window.Admin.vue.modulesComponents.modules = Object.assign(
+        {}, window.Admin.vue.modulesComponents.modules, {
+          'ingredients-package': {
+            components: [],
+          },
+        });
+  }
 };
 
 module.exports = ingredients;

@@ -7,6 +7,7 @@ use InetStudio\IngredientsPackage\Ingredients\Contracts\Services\Back\DataTableS
 use InetStudio\IngredientsPackage\Ingredients\Contracts\Http\Requests\Back\SaveItemRequestContract;
 use InetStudio\IngredientsPackage\Ingredients\Contracts\Http\Responses\Back\Resource\FormResponseContract;
 use InetStudio\IngredientsPackage\Ingredients\Contracts\Http\Responses\Back\Resource\SaveResponseContract;
+use InetStudio\IngredientsPackage\Ingredients\Contracts\Http\Responses\Back\Resource\ShowResponseContract;
 use InetStudio\IngredientsPackage\Ingredients\Contracts\Http\Responses\Back\Resource\IndexResponseContract;
 use InetStudio\IngredientsPackage\Ingredients\Contracts\Http\Responses\Back\Resource\DestroyResponseContract;
 
@@ -24,6 +25,16 @@ interface ResourceControllerContract
      */
     public function index(DataTableServiceContract $dataTableService): IndexResponseContract;
 
+    /**
+     * Получение объекта.
+     *
+     * @param  ItemsServiceContract  $resourceService
+     * @param  int  $id
+     *
+     * @return ShowResponseContract
+     */
+    public function show(ItemsServiceContract $resourceService, int $id = 0): ShowResponseContract;
+    
     /**
      * Создание объекта.
      *

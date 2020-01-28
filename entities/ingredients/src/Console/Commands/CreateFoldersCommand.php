@@ -25,7 +25,6 @@ class CreateFoldersCommand extends Command
 
     /**
      * Запуск команды.
-     
      */
     public function handle(): void
     {

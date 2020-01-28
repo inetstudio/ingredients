@@ -6,6 +6,13 @@ return [
      * Настройки изображений
      */
 
+    'access' => [
+        'fields' => [
+            'content' => 'Контент',
+            'comments' => 'Комментарии',
+        ],
+    ],
+
     'images' => [
         'quality' => 75,
         'conversions' => [

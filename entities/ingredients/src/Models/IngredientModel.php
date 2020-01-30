@@ -12,7 +12,6 @@ use Illuminate\Database\Eloquent\SoftDeletes;
 use InetStudio\Rating\Models\Traits\Rateable;
 use InetStudio\Uploads\Models\Traits\HasImages;
 use InetStudio\Widgets\Models\Traits\HasWidgets;
-use InetStudio\Favorites\Models\Traits\Favoritable;
 use InetStudio\MetaPackage\Meta\Models\Traits\HasMeta;
 use InetStudio\TagsPackage\Tags\Models\Traits\HasTags;
 use InetStudio\Classifiers\Models\Traits\HasClassifiers;
@@ -35,7 +34,6 @@ class IngredientModel extends Model implements IngredientModelContract
     use HasImages;
     use HasWidgets;
     use Searchable;
-    use Favoritable;
     use HasComments;
     use SoftDeletes;
     use HasClassifiers;

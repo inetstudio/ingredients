@@ -5,7 +5,6 @@ namespace InetStudio\IngredientsPackage\Ingredients\Services\Front;
 use Illuminate\Support\Collection;
 use InetStudio\AdminPanel\Base\Services\BaseService;
 use InetStudio\AdminPanel\Base\Services\Traits\SlugsServiceTrait;
-use InetStudio\Favorites\Services\Front\Traits\FavoritesServiceTrait;
 use InetStudio\TagsPackage\Tags\Services\Front\Traits\TagsServiceTrait;
 use InetStudio\IngredientsPackage\Ingredients\Contracts\Models\IngredientModelContract;
 use InetStudio\IngredientsPackage\Ingredients\Contracts\Services\Front\ItemsServiceContract;
@@ -17,12 +16,6 @@ class ItemsService extends BaseService implements ItemsServiceContract
 {
     use TagsServiceTrait;
     use SlugsServiceTrait;
-    use FavoritesServiceTrait;
-
-    /**
-     * @var string
-     */
-    protected $favoritesType = 'ingredient';
 
     /**
      * ItemsService constructor.

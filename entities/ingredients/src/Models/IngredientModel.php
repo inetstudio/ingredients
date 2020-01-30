@@ -17,6 +17,7 @@ use InetStudio\TagsPackage\Tags\Models\Traits\HasTags;
 use InetStudio\Classifiers\Models\Traits\HasClassifiers;
 use InetStudio\AdminPanel\Base\Models\Traits\SluggableTrait;
 use InetStudio\StatusesPackage\Statuses\Models\Traits\Status;
+use InetStudio\AdminPanel\Base\Models\Traits\HasDynamicRelations;
 use InetStudio\CommentsPackage\Comments\Models\Traits\HasComments;
 use InetStudio\AdminPanel\Base\Models\Traits\Scopes\BuildQueryScopeTrait;
 use InetStudio\IngredientsPackage\Ingredients\Contracts\Models\IngredientModelContract;
@@ -38,6 +39,7 @@ class IngredientModel extends Model implements IngredientModelContract
     use SoftDeletes;
     use HasClassifiers;
     use SluggableTrait;
+    use HasDynamicRelations;
     use BuildQueryScopeTrait;
 
     /**

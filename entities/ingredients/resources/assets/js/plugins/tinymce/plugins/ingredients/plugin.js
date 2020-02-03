@@ -13,7 +13,7 @@ window.tinymce.PluginManager.add('ingredients', function(editor) {
     },
   };
 
-  function initFormsComponents() {
+  function initIngredientsComponents() {
     if (typeof window.Admin.vue.modulesComponents.$refs['ingredients-package_IngredientWidget'] == 'undefined') {
       window.Admin.vue.modulesComponents.modules['ingredients-package'].components = _.union(
           window.Admin.vue.modulesComponents.modules['ingredients-package'].components, [
@@ -22,13 +22,15 @@ window.tinymce.PluginManager.add('ingredients', function(editor) {
               data: widgetData,
             },
           ]);
-    } else {
-      let component = window.Admin.vue.modulesComponents.$refs['ingredients-package_IngredientWidget'][0];
-
-      component.$data.model.id = widgetData.model.id;
     }
   }
-  
+
+  function loadWidget() {
+    let component = window.Admin.vue.modulesComponents.$refs['ingredients-package_IngredientWidget'][0];
+
+    component.$data.model.id = widgetData.model.id;
+  }
+
   editor.addButton('add_ingredient_widget', {
     title: 'Ингредиенты',
     icon: 'fa fa-tint',
@@ -43,9 +45,11 @@ window.tinymce.PluginManager.add('ingredients', function(editor) {
           id: parseInt($(content).attr('data-id')) || 0,
         };
 
-        initFormsComponents();
+        initIngredientsComponents();
 
         window.waitForElement('#add_ingredient_widget_modal', function() {
+          loadWidget();
+
           $('#add_ingredient_widget_modal').modal();
         });
       } else {

@@ -3,7 +3,7 @@
 namespace InetStudio\IngredientsPackage\Ingredients\Contracts\Models;
 
 use OwenIt\Auditing\Contracts\Auditable;
-use Spatie\MediaLibrary\HasMedia\HasMedia;
+use Spatie\MediaLibrary\HasMedia;
 use InetStudio\AdminPanel\Base\Contracts\Models\BaseModelContract;
 
 /**

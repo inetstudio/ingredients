@@ -176,11 +176,13 @@ class IngredientModel extends Model implements IngredientModelContract
                 $query->select(
                     [
                         'id',
+                        'uuid',
                         'model_id',
                         'model_type',
                         'collection_name',
                         'file_name',
                         'disk',
+                        'conversions_disk',
                         'mime_type',
                         'custom_properties',
                         'responsive_images',

@@ -13,20 +13,8 @@ window.tinymce.PluginManager.add('ingredients', function(editor) {
     },
   };
 
-  function initIngredientsComponents() {
-    if (typeof window.Admin.vue.modulesComponents.$refs['ingredients-package_IngredientWidget'] == 'undefined') {
-      window.Admin.vue.modulesComponents.modules['ingredients-package'].components = _.union(
-          window.Admin.vue.modulesComponents.modules['ingredients-package'].components, [
-            {
-              name: 'IngredientWidget',
-              data: widgetData,
-            },
-          ]);
-    }
-  }
-
   function loadWidget() {
-    let component = window.Admin.vue.modulesComponents.$refs['ingredients-package_IngredientWidget'][0];
+    let component = window.Admin.vue.helpers.getVueComponent('ingredients-package', 'IngredientWidget');
 
     component.$data.model.id = widgetData.model.id;
   }
@@ -45,7 +33,7 @@ window.tinymce.PluginManager.add('ingredients', function(editor) {
           id: parseInt($(content).attr('data-id')) || 0,
         };
 
-        initIngredientsComponents();
+        window.Admin.vue.helpers.initComponent('ingredients-package', 'IngredientWidget', widgetData);
 
         window.waitForElement('#add_ingredient_widget_modal', function() {
           loadWidget();

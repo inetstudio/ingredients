@@ -61,7 +61,7 @@ class ItemsService extends BaseService implements ItemsServiceContract
         app()->make('InetStudio\Classifiers\Entries\Contracts\Services\Back\ItemsServiceContract')
             ->attachToObject($classifiersData, $item);
 
-        app()->make('InetStudio\Widgets\Contracts\Services\Back\WidgetsServiceContract')
+        app()->make('InetStudio\WidgetsPackage\Widgets\Contracts\Services\Back\ItemsServiceContract')
             ->attachToObject(request(), $item);
 
         $item->searchable();

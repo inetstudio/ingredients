@@ -119,7 +119,7 @@ trait HasIngredients
     public function scopeWithAllIngredients(Builder $query, $ingredients, string $column = 'slug'): Builder
     {
         $ingredients = $this->isIngredientsStringBased($ingredients)
-            ? $ingredients : $this->hydrateIngredients($ingredients)->pluck($column);
+            ? $ingredients : $this->hydrateIngredients($ingredients)->pluck($column)->toArray();
 
         collect($ingredients)->each(
             function ($ingredient) use ($query, $column) {
@@ -149,7 +149,7 @@ trait HasIngredients
     public function scopeWithAnyIngredients(Builder $query, $ingredients, string $column = 'slug'): Builder
     {
         $ingredients = $this->isIngredientsStringBased($ingredients)
-            ? $ingredients : $this->hydrateIngredients($ingredients)->pluck($column);
+            ? $ingredients : $this->hydrateIngredients($ingredients)->pluck($column)->toArray();
 
         return $query->whereHas(
             'ingredients',
@@ -189,7 +189,7 @@ trait HasIngredients
     public function scopeWithoutIngredients(Builder $query, $ingredients, string $column = 'slug'): Builder
     {
         $ingredients = $this->isIngredientsStringBased($ingredients)
-            ? $ingredients : $this->hydrateIngredients($ingredients)->pluck($column);
+            ? $ingredients : $this->hydrateIngredients($ingredients)->pluck($column)->toArray();
 
         return $query->whereDoesntHave(
             'ingredients',

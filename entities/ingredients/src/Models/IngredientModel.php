@@ -10,7 +10,7 @@ use OwenIt\Auditing\Auditable;
 use Illuminate\Database\Eloquent\Model;
 use Cviebrock\EloquentSluggable\Sluggable;
 use Illuminate\Database\Eloquent\SoftDeletes;
-use InetStudio\Uploads\Models\Traits\HasImages;
+use InetStudio\UploadsPackage\Uploads\Models\Traits\HasMedia;
 use Cviebrock\EloquentSluggable\SluggableScopeHelpers;
 use InetStudio\WidgetsPackage\Widgets\Models\Traits\HasWidgets;
 use InetStudio\MetaPackage\Meta\Models\Traits\HasMeta;
@@ -31,7 +31,7 @@ class IngredientModel extends Model implements IngredientModelContract
     use HasMeta;
     use Auditable;
     use Sluggable;
-    use HasImages;
+    use HasMedia;
     use HasWidgets;
     use Searchable;
     use HasComments;
@@ -57,16 +57,6 @@ class IngredientModel extends Model implements IngredientModelContract
      * @var bool
      */
     protected $auditTimestamps = true;
-
-    /**
-     * Настройки для генерации изображений.
-     *
-     * @var array
-     */
-    protected $images = [
-        'config' => 'ingredients',
-        'model' => '',
-    ];
 
     /**
      * Связанная с моделью таблица.
@@ -362,6 +352,11 @@ class IngredientModel extends Model implements IngredientModelContract
         $engine->addRules($rules);
 
         return $engine;
+    }
+
+    public function getMediaConfig(): array
+    {
+        return config('ingredients.media', []);
     }
 
     use Status;

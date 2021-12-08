@@ -1,3 +1,5 @@
+import {ingredients} from './package/ingredients';
+
 require('./plugins/tinymce/plugins/ingredients');
 
 require('../../../../../../widgets/entities/widgets/resources/assets/js/mixins/widget');
@@ -9,5 +11,4 @@ window.Vue.component(
     () => import('./components/partials/IngredientWidget/IngredientWidget.vue'),
 );
 
-let ingredients = require('./package/ingredients');
 ingredients.init();

@@ -1,6 +1,5 @@
-let ingredients = {};
+export let ingredients = {
+  init: function () {
 
-ingredients.init = function() {
+  }
 };
-
-module.exports = ingredients;

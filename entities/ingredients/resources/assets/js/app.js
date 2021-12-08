@@ -4,9 +4,9 @@ require('../../../../../../widgets/entities/widgets/resources/assets/js/mixins/w
 
 require('./stores/ingredients');
 
-Vue.component(
+window.Vue.component(
     'IngredientWidget',
-    require('./components/partials/IngredientWidget/IngredientWidget.vue').default,
+    () => import('./components/partials/IngredientWidget/IngredientWidget.vue'),
 );
 
 let ingredients = require('./package/ingredients');
